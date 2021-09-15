@@ -58,7 +58,7 @@ export const routes = [
                 }
             },
             {
-                path: '/create',
+                path: 'create',
                 name: 'user-create',
                 icon: 'user-add',
                 drawerForm: true,
@@ -71,7 +71,7 @@ export const routes = [
                 }
             },
             {
-                path: '/show',
+                path: 'show',
                 name: 'user-show',
                 icon: 'user',
                 show: false,
@@ -84,16 +84,137 @@ export const routes = [
                 }
             },
             {
-                path: '/edit',
+                path: 'edit/:id',
                 name: 'user-edit',
                 icon: 'user',
                 show: false,
                 component: () => import('../views/users/Edit'),
                 meta: {
-                    drawerForm: 'UserEdit',
                     for: ['super_admin', 'admin', 'moderator'],
                     middleware: [auth],
                     title: 'Редактирование пользователя'
+                }
+            },
+        ]
+    },
+    {
+        path: '/faculties',
+        name: 'faculties',
+        icon: '',
+        show: true,
+        component: () => import('../views/MainIndex'),
+        meta: {
+            for: ['super_admin', 'admin', 'moderator'],
+            middleware: [auth],
+            title: 'Факультеты'
+        },
+        children: [
+            {
+                path: '',
+                name: 'faculty-list',
+                show: true,
+                component: () => import('../views/faculties/List'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator'],
+                    middleware: [auth],
+                    title: 'Список факультетов'
+                }
+            },
+            {
+                path: 'edit/:id',
+                name: 'faculty-edit',
+                show: false,
+                component: () => import('../views/faculties/Edit'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator'],
+                    middleware: [auth],
+                    title: 'Редактирование факультета'
+                }
+            },
+            {
+                path: 'create',
+                name: 'faculty-create',
+                show: true,
+                component: () => import('../views/faculties/Create'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator'],
+                    middleware: [auth],
+                    title: 'Новый факультет'
+                }
+            },
+            {
+                path: 'show',
+                name: 'faculty-show',
+                show: false,
+                component: () => import('../views/faculties/Show'),
+                meta: {
+                    drawerForm: 'FacultyShow',
+                    for: ['super_admin', 'admin', 'moderator'],
+                    middleware: [auth],
+                    title: 'Факультет'
+                }
+            },
+        ]
+    },
+    {
+        path: '/departments',
+        name: 'departments',
+        icon: '',
+        show: true,
+        component: () => import('../views/MainIndex'),
+        meta: {
+            for: ['super_admin', 'admin', 'moderator'],
+            middleware: [auth],
+            title: 'Кафедры'
+        },
+        children: [
+            {
+                path: '',
+                name: 'department-list',
+                icon: '',
+                show: true,
+                component:() => import('../views/departments/List'),
+                meta: {
+                    for: ['super_admin','admin','moderator'],
+                    middleware: [auth],
+                    title: 'Список кафедр'
+                },
+            },
+            {
+                path: 'create',
+                name: 'department-create',
+                icon: '',
+                show: true,
+                component:() => import('../views/departments/Create'),
+                meta: {
+                    for: ['super_admin','admin','moderator'],
+                    middleware: [auth],
+                    title: 'Новая кафедра'
+                },
+            },
+            {
+                path: 'show/:id',
+                name: 'department-show',
+                icon: '',
+                show: false,
+                component: () => import('../views/departments/Show'),
+                meta: {
+                    drawerForm: 'DepartmentShow',
+                    for: ['super_admin', 'admin', 'moderator'],
+                    middleware: [auth],
+                    title: 'Кафедра'
+                }
+            },
+            {
+                path: 'edit/:id',
+                name: 'department-edit',
+                icon: '',
+                show: false,
+                component: () => import('../views/departments/Edit'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator'],
+                    middleware: [auth],
+                    title: 'Кафедра'
                 }
             },
         ]

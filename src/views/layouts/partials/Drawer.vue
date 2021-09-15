@@ -12,12 +12,14 @@
 </template>
 <script>
 import UserShow from '../../users/Show';
-import UserEdit from '../../users/Edit';
+import FacultyShow from '../../faculties/Show';
+import DepartmentShow from '../../departments/Show';
 
 export default {
   components: {
     UserShow,
-    UserEdit,
+    FacultyShow,
+    DepartmentShow
   },
   data() {
     return {

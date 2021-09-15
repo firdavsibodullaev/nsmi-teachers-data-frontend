@@ -115,8 +115,8 @@ export default {
             },
 
             // Users
-            getUsers(body, onSuccess, onError) {
-                return this.axiosGet('/user', body, onSuccess, onError);
+            getUser(userId, onSuccess, onError) {
+                return this.axiosGet(`/user/${userId}`, false, onSuccess, onError);
             },
             filterUsers(query, onSuccess, onError) {
                 return this.axiosGet(`/user?${query}`, false, onSuccess, onError);
@@ -131,11 +131,44 @@ export default {
                 return this.axiosDelete(`/user/${Id}`, null, onSuccess, onError);
             },
 
+            // Факультеты
             getFaculties(query, onSuccess, onError) {
                 let url = '/faculty';
                 if (query) url += `?${query}`;
                 return this.axiosGet(url, false, onSuccess, onError);
             },
+            getFaculty(facultyId, onSuccess, onError) {
+                return this.axiosGet(`/faculty/${facultyId}`, false, onSuccess, onError);
+            },
+            createFaculty(body, onSuccess, onError) {
+                return this.axiosPost('/faculty', body, onSuccess, onError);
+            },
+            saveFaculty(facultyId, body, onSuccess, onError) {
+                return this.axiosPut(`/faculty/${facultyId}`, body, onSuccess, onError);
+            },
+            deleteFaculty({Id}, onSuccess, onError) {
+                return this.axiosDelete(`/faculty/${Id}`, null, onSuccess, onError);
+            },
+
+            // Кафедры
+            getDepartments(query, onSuccess, onError) {
+                let url = '/department';
+                if (query) url += `?${query}`;
+                return this.axiosGet(url, false, onSuccess, onError);
+            },
+            getDepartment(departmentId, onSuccess, onError) {
+                return this.axiosGet(`/department/${departmentId}`, false, onSuccess, onError);
+            },
+            createDepartment(body, onSuccess, onError) {
+                return this.axiosPost('/department', body, onSuccess, onError);
+            },
+            saveDepartment(facultyId, body, onSuccess, onError) {
+                return this.axiosPut(`/department/${facultyId}`, body, onSuccess, onError);
+            },
+            deleteDepartment({Id}, onSuccess, onError) {
+                return this.axiosDelete(`/department/${Id}`, null, onSuccess, onError);
+            },
+
             getPostConstants(onSuccess, onError) {
                 return this.axiosGet('/constant/post', false, onSuccess, onError);
             }

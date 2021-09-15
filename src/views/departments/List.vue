@@ -1,14 +1,28 @@
 <template>
   <a-table :data-source="data">
     <span slot="title" style="color: #1890ff">Пользователи</span>
-    <a-table-column key="{{LastName}}" title="ФИО">
+    <a-table-column :key="data.FullNameUz" title="Полное название">
       <template slot-scope="text, record">
         <span>
-          {{ record.LastName }} {{ record.FirstName }} {{ record.Patronymic }}
+          {{ record.FullNameUz }}
         </span>
       </template>
     </a-table-column>
-    <a-table-column key="{{Id}}" title="Действия">
+    <a-table-column :key="data.ShortNameUz" title="Короткое название">
+      <template slot-scope="text, record">
+        <span>
+          {{ record.ShortNameUz }}
+        </span>
+      </template>
+    </a-table-column>
+    <a-table-column :key="data.Faculty" title="Факультет">
+      <template slot-scope="text, record">
+        <span v-if="record.Faculty">
+          {{ record.Faculty.ShortNameRu }}
+        </span>
+      </template>
+    </a-table-column>
+    <a-table-column :key="data.Id" title="Действия">
       <template slot-scope="text, record">
         <span>
           <a-button-group>
@@ -24,7 +38,6 @@
               Редактировать
             </a-button>
             <a-popconfirm
-                v-if="record.Id !== $store.getters['user/user'].Id"
                 title="Действительно собираетесь удалить запись?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -34,12 +47,6 @@
               Удалить
             </a-button>
           </a-popconfirm>
-            <a-button v-else
-                      type="danger"
-                      :disabled="true"
-            >
-              Удалить
-            </a-button>
           </a-button-group>
           <a-divider type="vertical"/>
           <a></a>
@@ -47,7 +54,6 @@
       </template>
     </a-table-column>
   </a-table>
-
 </template>
 
 <script>
@@ -62,19 +68,23 @@ export default {
     }
   },
   methods: {
+    logg(arg) {
+      console.log(arg);
+      return arg;
+    },
     update(data) {
-      this.$router.push({name: 'user-edit', params: {id: data.Id}});
+      this.$router.push({name: 'department-edit', params: {id: data.Id}});
       // const routes = this.$router.getRoutes();
-      // const next = _.find(routes, (item) => item.name === 'user-edit');
+      // const next = _.find(routes, (item) => item.name === 'department-edit');
       // this.drawerOpen(next.meta.drawerForm, next.meta.title, data);
     },
     view(data) {
-      const {route} = this.$router.resolve({name: 'user-show'});
+      const {route} = this.$router.resolve({name: 'department-show', params: data.Id});
       this.drawerOpen(route.meta.drawerForm, route.meta.title, data);
     },
     destroy(data) {
       this.loading = true;
-      this.$api.deleteUser(data, () => {
+      this.$api.deleteDepartment(data, () => {
         this.fetch();
         this.loading = true;
       }, () => {
@@ -89,11 +99,11 @@ export default {
       });
     },
     fetch() {
-      this.getUsers();
+      this.getDepartments();
       this.loading = false;
     },
-    getUsers() {
-      return this.$api.filterUsers(false, ({data}) => {
+    getDepartments() {
+      return this.$api.getDepartments(false, ({data}) => {
         this.data = data.data;
         this.pagination = {
           pageSize: data.meta.per_page,
