@@ -3,8 +3,11 @@
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-}
+  name: 'PrimaryLayout',
+};
 </script>
+
+<style scoped>
+
+</style>
