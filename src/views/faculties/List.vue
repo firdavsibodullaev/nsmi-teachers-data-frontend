@@ -1,10 +1,17 @@
 <template>
   <a-table :data-source="data">
     <span slot="title" style="color: #1890ff">Пользователи</span>
-    <a-table-column key="{{LastName}}" title="ФИО">
+    <a-table-column key="{{FullNameUz}}" title="Полное название">
       <template slot-scope="text, record">
         <span>
-          {{ record.LastName }} {{ record.FirstName }} {{ record.Patronymic }}
+          {{ record.FullNameUz }}
+        </span>
+      </template>
+    </a-table-column>
+    <a-table-column key="{{ShortNameUz}}" title="Короткое название">
+      <template slot-scope="text, record">
+        <span>
+          {{ record.ShortNameUz }}
         </span>
       </template>
     </a-table-column>
@@ -24,7 +31,6 @@
               Редактировать
             </a-button>
             <a-popconfirm
-                v-if="record.Id !== $store.getters['user/user'].Id"
                 title="Действительно собираетесь удалить запись?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -34,12 +40,6 @@
               Удалить
             </a-button>
           </a-popconfirm>
-            <a-button v-else
-                      type="danger"
-                      :disabled="true"
-            >
-              Удалить
-            </a-button>
           </a-button-group>
           <a-divider type="vertical"/>
           <a></a>
@@ -63,18 +63,18 @@ export default {
   },
   methods: {
     update(data) {
-      this.$router.push({name: 'user-edit', params: {id: data.Id}});
+      this.$router.push({name: 'faculty-edit', params: {id: data.Id}});
       // const routes = this.$router.getRoutes();
       // const next = _.find(routes, (item) => item.name === 'user-edit');
       // this.drawerOpen(next.meta.drawerForm, next.meta.title, data);
     },
     view(data) {
-      const {route} = this.$router.resolve({name: 'user-show'});
+      const { route } = this.$router.resolve({name: 'faculty-show'});
       this.drawerOpen(route.meta.drawerForm, route.meta.title, data);
     },
     destroy(data) {
       this.loading = true;
-      this.$api.deleteUser(data, () => {
+      this.$api.deleteFaculty(data, () => {
         this.fetch();
         this.loading = true;
       }, () => {
@@ -89,11 +89,11 @@ export default {
       });
     },
     fetch() {
-      this.getUsers();
+      this.getFaculties();
       this.loading = false;
     },
-    getUsers() {
-      return this.$api.filterUsers(false, ({data}) => {
+    getFaculties() {
+      return this.$api.getFaculties(false, ({data}) => {
         this.data = data.data;
         this.pagination = {
           pageSize: data.meta.per_page,

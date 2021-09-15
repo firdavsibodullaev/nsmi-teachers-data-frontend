@@ -114,7 +114,7 @@
               :loading="loading"
               @click="onSubmit"
           >
-            Submit
+            Создать
           </a-button>
         </a-form-item>
       </a-col>
@@ -169,8 +169,6 @@ export default {
               this.validationFails = true;
               this.validationErrors = errors;
               this.form.setFieldsValue(fields);
-              console.log(this.validationErrors);
-              console.log(this.validationFails);
             }
           });
         }

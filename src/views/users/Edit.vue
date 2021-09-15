@@ -91,12 +91,12 @@
             <a-select
                 placeholder="Выберите факультет"
                 style="width: 250px"
-                @change="handleChangeFaculty"
-                v-decorator="['FacultyId', {rules:[{
-                  initialValue: data.Faculty.Id,
-                  required:true, message: 'Выберите факультет'}]
-                }]"
-                :default-value="data.Faculty.FullNameUz"
+                @change="handleChangeSelectValue($event, 'FacultyId')"
+                v-decorator="[
+                'FacultyId',
+                { initialValue: data.Faculty.Id,
+                rules: [{ required: true,
+                message: 'Выберите факультет' }] }, ]"
             >
               <a-select-option v-for="(item, index) in faculties" :key="index" :value="item.Id">
                 {{ item.FullNameUz }}
@@ -107,9 +107,10 @@
             <a-select
                 placeholder="Выберите кафедру"
                 style="width: 250px"
-                @change="handleChangeDepartment"
-                v-decorator="['DepartmentId', {rules:[{
+                @change="handleChangeSelectValue($event, 'DepartmentId')"
+                v-decorator="['DepartmentId', {
                   initialValue: data.Department.Id,
+                  rules:[{
                   required:true, message: 'Выберите кафедру'}]
                 }]"
             >
@@ -123,8 +124,9 @@
                 placeholder="Выберите должность"
                 style="width: 250px"
                 @change="handleChangePost"
-                v-decorator="['Post', {rules:[{
+                v-decorator="['Post', {
                   initialValue: data.Post.KeyName,
+                  rules:[{
                   required:true, message: 'Введите должность'}]
                 }]"
             >
@@ -165,7 +167,7 @@ export default {
       loading: false,
       posts: [],
       faculties: [],
-      faculty: null,
+      faculty: false,
       validationFails: false,
       validationErrors: [],
       data: null,
@@ -173,9 +175,9 @@ export default {
   },
   computed: {
     departments() {
-      if (this.faculty) {
-        const faculty = this.faculties.filter((item) => item.Id === this.faculty);
-        return faculty[0].Departments;
+      if (this.faculty && this.faculties.length) {
+        const filteredFaculty = this.faculties.filter((item) => item.Id === this.faculty);
+        return filteredFaculty[0].Departments;
       }
       return [];
     },
@@ -183,12 +185,10 @@ export default {
   methods: {
     onSubmit(e) {
       e.preventDefault();
-      console.log(this.form.getFieldsValue());
       this.form.validateFields((error, values) => {
         if (!error) {
           this.loading = true;
           this.$api.saveUser(this.data.Id, values, () => {
-            this.loading = false;
             this.$router.push({name: 'user-list'});
           }, ({data, status}) => {
             const fields = formatResponseValidatorFields(data, values);
@@ -219,7 +219,16 @@ export default {
         FacultyId: val,
         DepartmentId: null,
       });
-      this.faculty = val;
+    },
+    handleChangeSelectValue(value, field) {
+      this.form.setFieldsValue({
+        [field]: value,
+      });
+
+      if (field === 'FacultyId') {
+        this.faculty = value;
+        this.handleChangeSelectValue(null, 'DepartmentId');
+      }
     },
     handleChangeDepartment(val) {
       this.form.setFieldsValue({
@@ -231,25 +240,22 @@ export default {
         Birth: dateString
       });
     },
-    getPostsList() {
+    fetch() {
+      this.$api.getUser(this.$route.params['id'], ({data}) => {
+        this.data = data.data;
+        this.faculty = this.data.Faculty.Id;
+        console.log(1);
+      });
+      console.log(2);
       this.$api.getPostConstants(({data}) => {
         this.posts = data;
       });
-    },
-    getFacultiesList() {
       this.$api.getFaculties(false, ({data}) => {
         this.faculties = data.data;
       });
-    },
-    fetch() {
-      this.data = this.$store.getters['drawer/getData'];
-      this.getPostsList();
-      this.faculty = this.data.Faculty.Id;
-      console.log(this.data);
-      this.getFacultiesList();
     }
   },
-  beforeMount() {
+  created() {
     this.fetch();
   },
 };
