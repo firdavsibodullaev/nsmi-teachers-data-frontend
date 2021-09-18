@@ -33,14 +33,15 @@
               Смотреть
             </a-button>
             <a-button
+                type="default"
                 @click="update(record)"
             >
               Редактировать
             </a-button>
             <a-popconfirm
                 title="Действительно собираетесь удалить запись?"
-                ok-text="Yes"
-                cancel-text="No"
+                ok-text="Да"
+                cancel-text="Нет"
                 @confirm="destroy(record)"
             >
             <a-button type="danger">
@@ -116,7 +117,6 @@ export default {
   created() {
     this.fetch();
   },
-  watch: {}
 }
 </script>
 

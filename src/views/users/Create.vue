@@ -124,7 +124,6 @@
 <script>
 import {TheMask} from 'vue-the-mask';
 import {formatResponseValidatorFields} from "../../helpers";
-// import { formatResponseValidatorFields } from '../../helpers';
 
 export default {
   beforeCreate() {

@@ -13,7 +13,7 @@
                 placeholder="Выберите факультет"
                 @change="handlerSelectChange('FacultyId', $event)"
                 v-decorator="[
-                    'FacultyId',
+                    'F+-acultyId',
                     {
                       initialValue: data.Faculty !== null ? data.Faculty.Id : '',
                       rules: [{
