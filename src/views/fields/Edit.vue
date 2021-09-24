@@ -29,6 +29,19 @@
           </a-form-item>
         </a-col>
       </a-row>
+      <a-form-item label="Тип поля">
+        <a-select
+            placeholder="Выберите тип поля"
+            v-decorator="['Type', {
+              initialValue: data.Type.KeyName,
+              rules: [{
+                required: true,
+                message: 'Выберите тип поля'
+              }]
+            }]">
+          <a-select-option v-for="(type, index) in types" :key="index" :value="index">{{ type }}</a-select-option>
+        </a-select>
+      </a-form-item>
       <div class="input-containers">
         <a-button type="primary" @click="onSubmit">Создать</a-button>
       </div>
@@ -49,6 +62,7 @@ export default {
   data() {
     return {
       data: {},
+      types: {},
       loading: false,
     };
   },
@@ -63,6 +77,9 @@ export default {
   methods: {
     fetch() {
       this.loading = true;
+      this.$api.getFieldTypes(false, ({data}) => {
+        this.types = data;
+      });
       this.$api.getField(this.$route.params['id'], ({data}) => {
         this.data = data.data;
         this.loading = false;

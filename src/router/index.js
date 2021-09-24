@@ -359,6 +359,63 @@ export const routes = [
         ]
     },
     {
+        path: '/actions',
+        name: 'action',
+        show: true,
+        component: () => import('../views/MainIndex'),
+        meta: {
+            for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+            middleware: [auth],
+            title: 'Таблицы'
+        },
+        children: [
+            {
+                path: '',
+                name: 'action-list',
+                show: true,
+                component: () => import('../views/actions/Index'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    middleware: [auth],
+                    title: 'Список'
+                }
+            },
+            {
+                path: 'list/:id',
+                name: 'action-table-list',
+                show: false,
+                component: () => import('../views/actions/Records'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    middleware: [auth],
+                    title: 'Записи'
+                }
+            },
+            {
+                path: 'show/:tableId/:userId',
+                name: 'action-table-show',
+                show: false,
+                component: () => import('../views/actions/RecordsView'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    middleware: [auth],
+                    title: 'Записи'
+                }
+            },
+            {
+                path: 'add/:id',
+                name: 'action-table-add',
+                show: false,
+                component: () => import('../views/actions/AddRecord'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    middleware: [auth],
+                    title: 'Новый запись'
+                }
+            },
+        ]
+    },
+    {
         path: '/forbidden',
         name: '403',
         icon: '',

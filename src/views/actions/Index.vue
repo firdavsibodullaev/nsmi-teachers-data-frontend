@@ -1,21 +1,24 @@
 <template>
   <div v-if="!empty">
     <a-table
-        :loading="loading"
         :columns="columns"
         :data-source="data"
         :pagination="pagination"
-        :rowKey="record => record.User.Id"
+        :rowKey="record => record.Id"
         @change="handleTableChange">
-      <template slot="user" slot-scope="item">
-        {{ item.LastName }} {{ item.FirstName }} {{ item.Patronymic }}
-      </template>
       <template slot="actions" slot-scope="item">
-        <a-button
-            type="primary"
-            @click="view(item)">
-          Смотреть
-        </a-button>
+        <a-button-group>
+          <a-button
+              type="primary"
+              @click="view(item)">
+            Смотреть
+          </a-button>
+          <a-button
+              type="default"
+              @click="add(item)">
+            Добавить запись
+          </a-button>
+        </a-button-group>
       </template>
     </a-table>
   </div>
@@ -26,31 +29,26 @@ import _ from 'lodash';
 
 const columns = [
   {
-    title: 'Пользователь',
-    dataIndex: 'User',
+    title: 'Название таблицы',
+    dataIndex: 'FullName',
     sorter: true,
-    scopedSlots: {customRender: 'user'}
-  },
-  {
-    title: 'Количество',
-    dataIndex: 'Total',
   },
   {
     title: 'Действия',
+    key: 'actions',
     scopedSlots: {customRender: 'actions'},
-    key: 'actions'
   }
-];
+]
 export default {
-  name: "Records",
+  name: "Index",
   data() {
     return {
-      data: [],
       loading: false,
-      pagination: {},
-      page: 1,
-      columns
-    };
+      data: [],
+      pagination: [],
+      columns,
+      page: 1
+    }
   },
   computed: {
     empty() {
@@ -60,14 +58,14 @@ export default {
   methods: {
     fetch(params = {}) {
       this.loading = true;
-      this.$api.getRecords(this.$route.params['id'], {...params}, ({data}) => {
+      this.$api.getTables({page: this.page, ...params}, ({data}) => {
         this.data = data.data;
+        this.loading = false;
         this.pagination = {
           pageSize: data.meta.per_page,
           current: data.meta.current_page,
           total: data.meta.total,
-        };
-        this.loading = false;
+        }
       });
     },
     handleTableChange(pagination, filters, sorter) {
@@ -85,14 +83,14 @@ export default {
       });
     },
     view(data) {
-      this.$router.push({
-        name: 'action-table-show',
-        params: {
-          userId: data.User.Id,
-          tableId: this.$route.params['id']
-        }
-      })
-
+      this.loading = true;
+      this.$router.push({name: 'action-table-list', params: {id: data.Id}});
+      this.loading = false;
+    },
+    add(data) {
+      this.loading = true;
+      this.$router.push({name: 'action-table-add', params: {id: data.Id}});
+      this.loading = false;
     }
   },
   created() {

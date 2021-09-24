@@ -1,39 +1,54 @@
 <template>
-  <a-form :form="form" :layout="'vertical'" @submit="onSubmit">
-    <a-row>
-      <a-col :span="12">
-        <a-form-item label="Полное название" class="input-containers">
-          <a-input
-              placeholder="Введите полное название таблицы"
-              v-decorator="['FullName', {
+  <div v-if="!empty">
+    <a-form :form="form" :layout="'vertical'" @submit="onSubmit">
+      <a-row>
+        <a-col :span="12">
+          <a-form-item label="Полное название" class="input-containers">
+            <a-input
+                placeholder="Введите полное название таблицы"
+                v-decorator="['FullName', {
                   rules:[{
                     required: true,
                     message: 'Заполните поле'
                   }]
                 }]"/>
-        </a-form-item>
-      </a-col>
-      <a-col :span="12">
-        <a-form-item label="Краткое название" class="input-containers">
-          <a-input
-              placeholder="Введите краткое название таблицы"
-              v-decorator="['ShortName', {
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label="Краткое название" class="input-containers">
+            <a-input
+                placeholder="Введите краткое название таблицы"
+                v-decorator="['ShortName', {
                   rules:[{
                     required: true,
                     message: 'Заполните поле'
                   }]
                 }]"/>
-        </a-form-item>
-      </a-col>
-    </a-row>
-    <div class="input-containers">
-      <a-button type="primary" @click="onSubmit">Создать</a-button>
-    </div>
-  </a-form>
+          </a-form-item>
+        </a-col>
+      </a-row>
+      <a-form-item label="Тип поля">
+        <a-select
+            placeholder="Выберите тип поля"
+            v-decorator="['Type', {
+              initialValue: 'string',
+              rules: [{
+                required: true,
+                message: 'Выберите тип поля'
+              }]
+            }]">
+          <a-select-option v-for="(type, index) in types" :key="index" :value="index">{{ type }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <div class="input-containers">
+        <a-button type="primary" @click="onSubmit">Создать</a-button>
+      </div>
+    </a-form>
+  </div>
 </template>
 
 <script>
-
+import _ from 'lodash';
 import {formatResponseValidatorFields} from "../../helpers";
 
 export default {
@@ -44,9 +59,27 @@ export default {
   data() {
     return {
       loading: false,
+      types: [],
     };
   },
+  computed: {
+    empty() {
+      return _.isEmpty(this.types);
+    }
+  },
+  created() {
+    this.fetch();
+  },
   methods: {
+    fetch(params = {}) {
+      this.loading = true;
+      this.$api.getFieldTypes({...params}, ({data}) => {
+        this.types = data;
+        this.loading = false;
+      }, () => {
+        this.loading = false;
+      });
+    },
     onSubmit() {
       this.form.validateFields((error, values) => {
         this.loading = true;

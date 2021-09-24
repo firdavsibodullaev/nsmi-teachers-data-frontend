@@ -87,7 +87,7 @@ export default {
             getHeaders(replaceHeaders) {
                 const headers = {
                     Accept: 'application/json',
-                    ContentType: 'application/json',
+                    ContentType: 'multipart/form-data',
                 };
 
                 if (getters['user/isGuest'] === false) {
@@ -192,6 +192,10 @@ export default {
             getField(fieldId, onSuccess, onError) {
                 return this.axiosGet(`/field/${fieldId}`, false, onSuccess, onError);
             },
+            getFieldTypes(body, onSuccess, onError) {
+                return this.axiosGet(`/field/types`, body, onSuccess, onError);
+            },
+
             createField(body, onSuccess, onError) {
                 return this.axiosPost('/field', body, onSuccess, onError);
             },
@@ -204,6 +208,16 @@ export default {
 
             getPostConstants(onSuccess, onError) {
                 return this.axiosGet('/constant/post', false, onSuccess, onError);
+            },
+
+            getRecords(tableId, body, onSuccess, onError) {
+                return this.axiosGet(`/record/${tableId}`, body, onSuccess, onError);
+            },
+            getList(tableId, userId, body, onSuccess, onError) {
+                return this.axiosGet(`/record/${tableId}/${userId}`, body, onSuccess, onError);
+            },
+            createRecord(recordId, body, onSuccess, onError) {
+                return this.axiosPost(`/record/${recordId}`, body, onSuccess, onError);
             }
         };
     },
