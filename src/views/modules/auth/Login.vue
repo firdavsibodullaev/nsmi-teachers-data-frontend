@@ -1,9 +1,7 @@
 <template>
-  <a-row id="wrap" type="flex">
-    <a-col :flex="2">
-
+  <div id="background">
+    <div class="box">
       <a-form
-          id="components-form-demo-normal-login"
           :form="form"
           class="login-form"
           @submit="handleSubmit"
@@ -44,9 +42,8 @@
           </a-button>
         </a-form-item>
       </a-form>
-    </a-col>
-    <a-col :flex="7" id="background"></a-col>
-  </a-row>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -99,34 +96,36 @@ export default {
 </script>
 
 <style>
-#wrap {
-  height: 100vh;
-}
 
 #background {
   background-image: url("../../../assets/login-background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position-x: right;
+  background-position-y: bottom;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  background: rgba(200, 200, 200, 0.4);
+  border-radius: 1rem;
+  max-height: 21rem;
+  display: block;
+  width: 20%;
+  /*margin-top: 10%;*/
 }
 
 .login-form {
-  width: 60%;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 35%;
+  padding: 1rem;
+  z-index: 2;
 }
 
-#components-form-demo-normal-login .login-form {
-  max-width: 300px;
-}
-
-#components-form-demo-normal-login .login-form-forgot {
-  float: right;
-}
-
-#components-form-demo-normal-login .login-form-button {
-  width: 100%;
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  .box {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
 }
 </style>
