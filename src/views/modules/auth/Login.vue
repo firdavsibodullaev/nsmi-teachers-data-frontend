@@ -5,7 +5,7 @@
           :form="form"
           class="login-form"
           @submit="handleSubmit"
-      >
+          aria-autocomplete="off">
         <a-form-item label="Логин">
           <a-input
               class="ant-input"

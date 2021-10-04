@@ -12,6 +12,7 @@
       </template>
       <template slot="actions" slot-scope="item">
         <a-button
+            v-if="isAccessed"
             type="primary"
             @click="view(item)">
           Смотреть
@@ -55,6 +56,9 @@ export default {
   computed: {
     empty() {
       return _.isEmpty(this.data);
+    },
+    isAccessed() {
+      return ['teacher', 'dean', 'vice_dean', 'admin', 'super_admin', 'moderator'].includes(this.$store.getters['user/user'].Post.KeyName);
     },
   },
   methods: {

@@ -1,6 +1,5 @@
 <template>
   <div v-if="!empty">
-
     <h3>{{ data.FullName }}</h3>
     <hr>
     <div v-if="validationFails">
@@ -8,28 +7,30 @@
         <a-alert type="error" :message="mes" v-for="(mes, ind) in item" :key="ind" banner/>
       </a-col>
     </div>
-    <a-form :form="form">
-      <a-form-item>
-        <a-input v-decorator="[`TableId`, { initialValue: data.Id}]" style="display: none"/>
-      </a-form-item>
+    <a-form>
       <a-form-item v-for="(field, index) in data.Fields" :label="field.FullName" :key="index">
-        <a-input v-decorator="[`Values[${index}][FieldId]`, { initialValue: field.Id}]" style="display: none"/>
         <a-input
+            @input="fillField(index, $event, field.Id)"
+            :required="true"
             v-if="field.Type.KeyName === 'number'"
+            class="required-inputs"
             type="number"
-            v-decorator="[`Values[${index}][Value]`, {
-              rules: [{
-                required:true,
-              }],
-            }]"
+
+            :placeholder="field.FullName"/>
+        <a-textarea
+            @input="fillField(index, $event, field.Id)"
+            :required="true"
+            v-else-if="field.Type.KeyName === 'text'"
+            class="required-inputs"
             :placeholder="field.FullName"/>
         <a-date-picker
+            class="required-inputs date-picker"
             v-else-if="field.Type.KeyName === 'date'"
             style="width:250px"
             placeholder="Выберите дату рождения"
-            @change="changeDate"
-            v-decorator="[`Values[${index}][Value]`, {rules:[{required:false, message: 'Выберите дату'}]}]"/>
+            @change="changeDate(index, $event, field.Id)"/>
         <a-upload
+            :file-list="fileList"
             v-else-if="field.Type.KeyName === 'file'"
             :action="uploadFile"
             :headers="headers"
@@ -41,31 +42,32 @@
           </a-button>
         </a-upload>
         <a-input
+            @input="fillField(index, $event, field.Id)"
+            :required="true"
             v-else-if="field.Type.KeyName === 'string'"
-            v-decorator="[`Values[${index}][Value]`, {
-             rules: [{
-                required:true,
-              }],
-            }]"
+            class="required-inputs"
             :placeholder="field.FullName"/>
       </a-form-item>
       <hr>
-      <a-button @click="onSubmit" type="primary">Создать</a-button>
+      <a-button @click="onSubmit" class="submit-button" type="primary">Создать</a-button>
     </a-form>
   </div>
 </template>
 
 <script>
 import _ from 'lodash';
-import {formatResponseValidatorFields} from "../../helpers";
 
 export default {
   name: "AddRecord",
-  beforeCreate() {
-    this.form = this.$form.createForm(this, {name: 'create-record'});
-  },
   data() {
+    const fileList = [];
+    console.log(this.empty);
     return {
+      fileList,
+      fieldsValue: {
+        TableId: null,
+        Values: [],
+      },
       loading: false,
       data: {},
       validationFails: false,
@@ -78,28 +80,38 @@ export default {
       return _.isEmpty(this.data);
     },
     uploadFile() {
-      return `${process.env.VUE_APP_BASE_URL}/record/upload`;
+      return `${process.env.VUE_APP_BASE_URL}/record/upload/${this.data.Id}`;
     },
     headers() {
       return {
-        Authorization: `Bearer ${this.$store.getters['user/accessToken']}`
+        Authorization: `Bearer ${this.$store.getters['user/accessToken']}`,
+        Accept: 'application/json',
       };
+    },
+    fileLists() {
+      if (this.empty) {
+        return [];
+      }
+      const {Fields} = this.data;
+      const fileFields = Fields.filter((field) => field.Type.KeyName === 'file');
+      return _.map(fileFields, 'Id');
     },
   },
   methods: {
-    changeDate(date, dateString) {
-      this.form.setFieldsValue({
-        Birth: dateString
-      });
+    changeDate(index, date, FieldId) {
+      if (date) {
+        this.fieldsValue.Values[index] = {
+          Value: date.format('YYYY-MM-DD'),
+          FieldId
+        }
+      } else {
+        this.fieldsValue.Values[index] = {}
+      }
     },
     withData(data) {
       return {
         FieldId: data.fieldId
       };
-    },
-    filteredValues(values) {
-      values.Values = values.Values.filter((item) => item.Value !== undefined);
-      return values;
     },
     handleUploadFileChange(info) {
       if (info.file.status === 'done') {
@@ -116,25 +128,49 @@ export default {
         this.loading = false;
       });
     },
+    checkInputsValue() {
+      let isFilled = true;
+      const inputs = document.querySelectorAll('.required-inputs');
+      for (let input of inputs) {
+        if (input.classList.contains('date-picker')) {
+          const dateInput = input.getElementsByTagName('input')[0];
+          if (!dateInput.value) {
+            console.log(dateInput);
+            dateInput.classList.add('error');
+            isFilled = false;
+          } else {
+            dateInput.classList.remove('error');
+          }
+        } else {
+          if (!input.value) {
+            input.classList.add('error');
+            isFilled = false;
+          } else {
+            input.classList.remove('error');
+          }
+        }
+      }
+      return isFilled;
+    },
+    fillField(name, value, field) {
+      this.fieldsValue.Values[name] = {
+        Value: value.target.value,
+        FieldId: field
+      }
+    },
     onSubmit(e) {
       e.preventDefault();
-      this.form.validateFields((error, values) => {
-        this.loading = true;
-        if (!error) {
-          const filteredValues = this.filteredValues(values);
-          this.$api.createRecord(this.recordId, filteredValues, () => {
-            this.$router.push({name: 'action-table-list', params: {id: this.data.Id}});
-          }, ({data, status}) => {
-            const fields = formatResponseValidatorFields(data, values);
-            if (status === 422) {
-              const errors = data.errors;
-              this.validationFails = true;
-              this.validationErrors = errors;
-              this.form.setFieldsValue(fields);
-            }
-          });
-        } else {
-          this.loading = false;
+      if (!this.checkInputsValue()) {
+        return;
+      }
+      this.fieldsValue.TableId = this.data.Id;
+      this.$api.createRecord(this.recordId, this.fieldsValue, () => {
+        this.$router.push({name: 'action-table-list', params: {id: this.data.Id}});
+      }, ({data, status}) => {
+        if (status === 422) {
+          const errors = data.errors;
+          this.validationFails = true;
+          this.validationErrors = errors;
         }
       });
     },
@@ -146,6 +182,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
+.error {
+  border-color: #ff0000 !important;
+}
 </style>

@@ -216,9 +216,16 @@ export default {
             getList(tableId, userId, body, onSuccess, onError) {
                 return this.axiosGet(`/record/${tableId}/${userId}`, body, onSuccess, onError);
             },
+            showRecord(recordId, onSuccess, onError) {
+                return this.axiosGet(`/record/show/${recordId}`, null, onSuccess, onError);
+            },
             createRecord(recordId, body, onSuccess, onError) {
-                return this.axiosPost(`/record/${recordId}`, body, onSuccess, onError);
-            }
+                const url = recordId !== undefined ? `/record/${recordId}` : `/record`;
+                return this.axiosPost(url, body, onSuccess, onError);
+            },
+            saveRecord(recordId, body, onSuccess, onError) {
+                return this.axiosPut(`/record/update/${recordId}`, body, onSuccess, onError);
+            },
         };
     },
 };

@@ -1,14 +1,24 @@
 <template>
   <div v-if="!empty">
     <a-table
+        bordered
         :columns="computedColumns"
         :data-source="computedData"
         :pagination="pagination"
         @change="handleTableChange">
-      <span slot="value" slot-scope="value">
-        <p v-if="!value.link">{{ value.text }}</p>
-        <a v-else :href="value.link" target="_blank">{{ value.text }}</a>
-      </span>
+      <template v-for="col in computedColumnsList" :slot="col" slot-scope="text">
+        <div :key="col">
+          <template>
+            <span v-if="!text.link">{{ text.text }}</span>
+            <a v-else :href="text.link" target="_blank">{{ text.text }}</a>
+          </template>
+        </div>
+      </template>
+      <template slot="operation" slot-scope="text, record">
+        <div class="editable-row-operations">
+          <a-button type="default" @click="edit(record)">Изменить</a-button>
+        </div>
+      </template>
     </a-table>
   </div>
 </template>
@@ -25,11 +35,15 @@ export default {
       userData: this.$store.getters['drawer/getData'],
       pagination: {},
       page: 1,
+      editingKey: '',
     };
   },
   computed: {
     empty() {
       return _.isEmpty(this.data);
+    },
+    computedColumnsList() {
+      return _.map(this.computedColumns, 'title');
     },
     computedColumns() {
       let columns = [];
@@ -37,24 +51,33 @@ export default {
       for (let field of Fields) {
         columns.push({
           title: field.FullName,
+          key: field.Id,
           dataIndex: field.FullName,
-          scopedSlots: {customRender: 'value'},
-          slots: {title: 'value'},
+          scopedSlots: {customRender: field.FullName},
+          slots: {title: field.FullName},
         });
       }
+      columns.push({
+        title: 'Действия',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'},
+      });
       return columns;
     },
     computedData() {
       let returnValue = [];
       for (let values of this.data) {
         let fieldValues = {};
+        fieldValues['recordId'] = values.Id;
         for (let fieldValue of values.Values) {
-          fieldValues[fieldValue.Field.FullName] = fieldValue.File === null
-              ? {text: fieldValue.Value}
-              : {link: fieldValue.File, text: fieldValue.Value};
+          fieldValues['key'] = fieldValue.Field.Id;
+          fieldValues[fieldValue.Field.FullName] = {
+            link: fieldValue.File,
+            text: fieldValue.Value,
+            field: fieldValue.Field
+          };
         }
         returnValue.push(fieldValues);
-        console.log(returnValue);
       }
       return returnValue;
     }
@@ -85,6 +108,11 @@ export default {
         sortOrder: sorter.order,
         ...filters,
       });
+    },
+    edit(data) {
+      this.loading = true;
+      this.$router.push({name: 'action-table-edit', params: {id: data.recordId}});
+      this.loading = false;
     }
   },
   created() {
@@ -95,8 +123,12 @@ export default {
 </script>
 
 <style scoped>
-.content-padding {
-  box-sizing: border-box;
-  padding: 2px 5rem;
+.editable-row-operations a {
+  margin-right: 8px;
+}
+</style>
+<style>
+main {
+  overflow-y: scroll !important;
 }
 </style>

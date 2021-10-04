@@ -364,7 +364,7 @@ export const routes = [
         show: true,
         component: () => import('../views/MainIndex'),
         meta: {
-            for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+            for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
             middleware: [auth],
             title: 'Таблицы'
         },
@@ -375,7 +375,7 @@ export const routes = [
                 show: true,
                 component: () => import('../views/actions/Index'),
                 meta: {
-                    for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
                     middleware: [auth],
                     title: 'Список'
                 }
@@ -386,7 +386,7 @@ export const routes = [
                 show: false,
                 component: () => import('../views/actions/Records'),
                 meta: {
-                    for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
                     middleware: [auth],
                     title: 'Записи'
                 }
@@ -408,9 +408,20 @@ export const routes = [
                 show: false,
                 component: () => import('../views/actions/AddRecord'),
                 meta: {
-                    for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
                     middleware: [auth],
                     title: 'Новый запись'
+                }
+            },
+            {
+                path: 'edit/:id',
+                name: 'action-table-edit',
+                show: false,
+                component: () => import('../views/actions/EditRecord'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    middleware: [auth],
+                    title: 'Редактирование записи'
                 }
             },
         ]
