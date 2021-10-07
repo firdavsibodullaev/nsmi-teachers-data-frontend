@@ -14,12 +14,18 @@
 import UserShow from '../../users/Show';
 import FacultyShow from '../../faculties/Show';
 import DepartmentShow from '../../departments/Show';
+import TableShow from '../../tables/Show';
+import FieldCreate from '../../fields/Create';
+import RecordsShow from '../../actions/RecordsView';
 
 export default {
   components: {
     UserShow,
     FacultyShow,
-    DepartmentShow
+    DepartmentShow,
+    TableShow,
+    FieldCreate,
+    RecordsShow,
   },
   data() {
     return {

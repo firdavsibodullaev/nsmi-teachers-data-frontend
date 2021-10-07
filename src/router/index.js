@@ -34,187 +34,394 @@ export const routes = [
         }
     },
     {
-        path: '/users',
-        name: 'users',
-        icon: 'usergroup-add',
+        path: '/lists',
+        name: 'lists',
         show: true,
         component: () => import('../views/MainIndex.vue'),
         meta: {
             for: ['super_admin', 'admin', 'moderator'],
+            title: 'Справочники',
             middleware: [auth],
-            title: 'Пользователи'
         },
         children: [
             {
-                path: '',
-                name: 'user-list',
-                icon: 'user',
-                component: () => import('../views/users/List'),
+                path: 'users',
+                name: 'users',
+                icon: 'usergroup-add',
                 show: true,
+                component: () => import('../views/layouts/PrimaryLayout.vue'),
                 meta: {
                     for: ['super_admin', 'admin', 'moderator'],
                     middleware: [auth],
-                    title: 'Список пользователей'
-                }
+                    title: 'Пользователи'
+                },
+                children: [
+                    {
+                        path: '',
+                        name: 'user-list',
+                        icon: 'user',
+                        component: () => import('../views/users/List'),
+                        show: true,
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Список пользователей'
+                        }
+                    },
+                    {
+                        path: 'create',
+                        name: 'user-create',
+                        icon: 'user-add',
+                        drawerForm: true,
+                        component: () => import('../views/users/Create'),
+                        show: true,
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Новый пользователь'
+                        }
+                    },
+                    {
+                        path: 'show',
+                        name: 'user-show',
+                        icon: 'user',
+                        show: false,
+                        component: () => import('../views/users/Show'),
+                        meta: {
+                            drawerForm: 'UserShow',
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Пользователь'
+                        }
+                    },
+                    {
+                        path: 'edit/:id',
+                        name: 'user-edit',
+                        icon: 'user',
+                        show: false,
+                        component: () => import('../views/users/Edit'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Редактирование пользователя'
+                        }
+                    },
+                ]
             },
             {
-                path: 'create',
-                name: 'user-create',
-                icon: 'user-add',
-                drawerForm: true,
-                component: () => import('../views/users/Create'),
+                path: 'faculties',
+                name: 'faculties',
+                icon: '',
                 show: true,
+                component: () => import('../views/layouts/PrimaryLayout.vue'),
                 meta: {
                     for: ['super_admin', 'admin', 'moderator'],
                     middleware: [auth],
-                    title: 'Новый пользователь'
-                }
+                    title: 'Факультеты'
+                },
+                children: [
+                    {
+                        path: '',
+                        name: 'faculty-list',
+                        show: true,
+                        component: () => import('../views/faculties/List'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Список факультетов'
+                        }
+                    },
+                    {
+                        path: 'edit/:id',
+                        name: 'faculty-edit',
+                        show: false,
+                        component: () => import('../views/faculties/Edit'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Редактирование факультета'
+                        }
+                    },
+                    {
+                        path: 'create',
+                        name: 'faculty-create',
+                        show: true,
+                        component: () => import('../views/faculties/Create'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Новый факультет'
+                        }
+                    },
+                    {
+                        path: 'show',
+                        name: 'faculty-show',
+                        show: false,
+                        component: () => import('../views/faculties/Show'),
+                        meta: {
+                            drawerForm: 'FacultyShow',
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Факультет'
+                        }
+                    },
+                ]
             },
             {
-                path: 'show',
-                name: 'user-show',
-                icon: 'user',
-                show: false,
-                component: () => import('../views/users/Show'),
+                path: 'departments',
+                name: 'departments',
+                icon: '',
+                show: true,
+                component: () => import('../views/layouts/PrimaryLayout.vue'),
                 meta: {
-                    drawerForm: 'UserShow',
                     for: ['super_admin', 'admin', 'moderator'],
                     middleware: [auth],
-                    title: 'Пользователь'
-                }
+                    title: 'Кафедры'
+                },
+                children: [
+                    {
+                        path: '',
+                        name: 'department-list',
+                        icon: '',
+                        show: true,
+                        component: () => import('../views/departments/List'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Список кафедр'
+                        },
+                    },
+                    {
+                        path: 'create',
+                        name: 'department-create',
+                        icon: '',
+                        show: true,
+                        component: () => import('../views/departments/Create'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Новая кафедра'
+                        },
+                    },
+                    {
+                        path: 'show/:id',
+                        name: 'department-show',
+                        icon: '',
+                        show: false,
+                        component: () => import('../views/departments/Show'),
+                        meta: {
+                            drawerForm: 'DepartmentShow',
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Кафедра'
+                        }
+                    },
+                    {
+                        path: 'edit/:id',
+                        name: 'department-edit',
+                        icon: '',
+                        show: false,
+                        component: () => import('../views/departments/Edit'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Редактирование кафедры'
+                        }
+                    },
+                ]
             },
             {
-                path: 'edit/:id',
-                name: 'user-edit',
-                icon: 'user',
-                show: false,
-                component: () => import('../views/users/Edit'),
+                path: 'tables',
+                name: 'tables',
+                icon: '',
+                show: true,
+                component: () => import('../views/layouts/PrimaryLayout.vue'),
                 meta: {
                     for: ['super_admin', 'admin', 'moderator'],
                     middleware: [auth],
-                    title: 'Редактирование пользователя'
-                }
+                    title: 'Таблицы',
+                },
+                children: [
+                    {
+                        path: '',
+                        name: 'table-list',
+                        icon: '',
+                        show: true,
+                        component: () => import('../views/tables/List'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Список таблиц'
+                        }
+                    },
+                    {
+                        path: 'create',
+                        name: 'table-create',
+                        icon: '',
+                        show: true,
+                        component: () => import('../views/tables/Create'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Новая таблица'
+                        }
+                    },
+                    {
+                        path: 'show/:id',
+                        name: 'table-show',
+                        icon: '',
+                        show: false,
+                        component: () => import('../views/tables/Show'),
+                        meta: {
+                            drawerForm: 'TableShow',
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Таблица'
+                        }
+                    },
+                    {
+                        path: 'edit/:id',
+                        name: 'table-edit',
+                        icon: '',
+                        show: false,
+                        component: () => import('../views/tables/Edit'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Редактирование таблицы'
+                        }
+                    }
+                ]
+            },
+            {
+                path: 'fields',
+                name: 'fields',
+                icon: '',
+                show: true,
+                component: () => import('../views/layouts/PrimaryLayout.vue'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator'],
+                    middleware: [auth],
+                    title: 'Поля таблицы'
+                },
+                children: [
+                    {
+                        path: '',
+                        name: 'field-list',
+                        icon: '',
+                        show: true,
+                        component: () => import('../views/fields/List'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Список полей',
+                        },
+                    },
+                    {
+                        path: 'create',
+                        name: 'field-create',
+                        icon: '',
+                        show: true,
+                        component: () => import('../views/fields/Create'),
+                        meta: {
+                            drawerForm: 'FieldCreate',
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Новое поле',
+                        },
+                    },
+                    {
+                        path: 'show/:id',
+                        name: 'field-show',
+                        icon: '',
+                        show: false,
+                        component: () => import('../views/fields/Show'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Поле',
+                        },
+                    },
+                    {
+                        path: 'edit/:id',
+                        name: 'field-edit',
+                        icon: '',
+                        show: false,
+                        component: () => import('../views/fields/Edit'),
+                        meta: {
+                            for: ['super_admin', 'admin', 'moderator'],
+                            middleware: [auth],
+                            title: 'Редактирование поля',
+                        },
+                    },
+                ]
             },
         ]
     },
     {
-        path: '/faculties',
-        name: 'faculties',
-        icon: '',
+        path: '/actions',
+        name: 'action',
         show: true,
         component: () => import('../views/MainIndex'),
         meta: {
-            for: ['super_admin', 'admin', 'moderator'],
+            for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
             middleware: [auth],
-            title: 'Факультеты'
+            title: 'Таблицы'
         },
         children: [
             {
                 path: '',
-                name: 'faculty-list',
+                name: 'action-list',
                 show: true,
-                component: () => import('../views/faculties/List'),
+                component: () => import('../views/actions/Index'),
                 meta: {
-                    for: ['super_admin', 'admin', 'moderator'],
+                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
                     middleware: [auth],
-                    title: 'Список факультетов'
+                    title: 'Список'
+                }
+            },
+            {
+                path: 'list/:id',
+                name: 'action-table-list',
+                show: false,
+                component: () => import('../views/actions/Records'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    middleware: [auth],
+                    title: 'Записи'
+                }
+            },
+            {
+                path: 'show/:tableId/:userId',
+                name: 'action-table-show',
+                show: false,
+                component: () => import('../views/actions/RecordsView'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    middleware: [auth],
+                    title: 'Записи'
+                }
+            },
+            {
+                path: 'add/:id',
+                name: 'action-table-add',
+                show: false,
+                component: () => import('../views/actions/AddRecord'),
+                meta: {
+                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
+                    middleware: [auth],
+                    title: 'Новый запись'
                 }
             },
             {
                 path: 'edit/:id',
-                name: 'faculty-edit',
+                name: 'action-table-edit',
                 show: false,
-                component: () => import('../views/faculties/Edit'),
+                component: () => import('../views/actions/EditRecord'),
                 meta: {
-                    for: ['super_admin', 'admin', 'moderator'],
+                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
                     middleware: [auth],
-                    title: 'Редактирование факультета'
-                }
-            },
-            {
-                path: 'create',
-                name: 'faculty-create',
-                show: true,
-                component: () => import('../views/faculties/Create'),
-                meta: {
-                    for: ['super_admin', 'admin', 'moderator'],
-                    middleware: [auth],
-                    title: 'Новый факультет'
-                }
-            },
-            {
-                path: 'show',
-                name: 'faculty-show',
-                show: false,
-                component: () => import('../views/faculties/Show'),
-                meta: {
-                    drawerForm: 'FacultyShow',
-                    for: ['super_admin', 'admin', 'moderator'],
-                    middleware: [auth],
-                    title: 'Факультет'
-                }
-            },
-        ]
-    },
-    {
-        path: '/departments',
-        name: 'departments',
-        icon: '',
-        show: true,
-        component: () => import('../views/MainIndex'),
-        meta: {
-            for: ['super_admin', 'admin', 'moderator'],
-            middleware: [auth],
-            title: 'Кафедры'
-        },
-        children: [
-            {
-                path: '',
-                name: 'department-list',
-                icon: '',
-                show: true,
-                component:() => import('../views/departments/List'),
-                meta: {
-                    for: ['super_admin','admin','moderator'],
-                    middleware: [auth],
-                    title: 'Список кафедр'
-                },
-            },
-            {
-                path: 'create',
-                name: 'department-create',
-                icon: '',
-                show: true,
-                component:() => import('../views/departments/Create'),
-                meta: {
-                    for: ['super_admin','admin','moderator'],
-                    middleware: [auth],
-                    title: 'Новая кафедра'
-                },
-            },
-            {
-                path: 'show/:id',
-                name: 'department-show',
-                icon: '',
-                show: false,
-                component: () => import('../views/departments/Show'),
-                meta: {
-                    drawerForm: 'DepartmentShow',
-                    for: ['super_admin', 'admin', 'moderator'],
-                    middleware: [auth],
-                    title: 'Кафедра'
-                }
-            },
-            {
-                path: 'edit/:id',
-                name: 'department-edit',
-                icon: '',
-                show: false,
-                component: () => import('../views/departments/Edit'),
-                meta: {
-                    for: ['super_admin', 'admin', 'moderator'],
-                    middleware: [auth],
-                    title: 'Кафедра'
+                    title: 'Редактирование записи'
                 }
             },
         ]

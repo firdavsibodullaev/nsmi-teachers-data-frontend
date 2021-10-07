@@ -87,7 +87,7 @@ export default {
             getHeaders(replaceHeaders) {
                 const headers = {
                     Accept: 'application/json',
-                    ContentType: 'application/json',
+                    ContentType: 'multipart/form-data',
                 };
 
                 if (getters['user/isGuest'] === false) {
@@ -132,10 +132,8 @@ export default {
             },
 
             // Факультеты
-            getFaculties(query, onSuccess, onError) {
-                let url = '/faculty';
-                if (query) url += `?${query}`;
-                return this.axiosGet(url, false, onSuccess, onError);
+            getFaculties(body, onSuccess, onError) {
+                return this.axiosGet('/faculty', body, onSuccess, onError);
             },
             getFaculty(facultyId, onSuccess, onError) {
                 return this.axiosGet(`/faculty/${facultyId}`, false, onSuccess, onError);
@@ -151,10 +149,8 @@ export default {
             },
 
             // Кафедры
-            getDepartments(query, onSuccess, onError) {
-                let url = '/department';
-                if (query) url += `?${query}`;
-                return this.axiosGet(url, false, onSuccess, onError);
+            getDepartments(body, onSuccess, onError) {
+                return this.axiosGet('/department', body, onSuccess, onError);
             },
             getDepartment(departmentId, onSuccess, onError) {
                 return this.axiosGet(`/department/${departmentId}`, false, onSuccess, onError);
@@ -169,9 +165,67 @@ export default {
                 return this.axiosDelete(`/department/${Id}`, null, onSuccess, onError);
             },
 
+            // Таблицы
+            getTables(body, onSuccess, onError) {
+                return this.axiosGet('/table', body, onSuccess, onError);
+            },
+            getTable(tableId, onSuccess, onError) {
+                return this.axiosGet(`/table/${tableId}`, false, onSuccess, onError);
+            },
+            createTable(body, onSuccess, onError) {
+                return this.axiosPost('/table', body, onSuccess, onError);
+            },
+            saveTable(tableId, body, onSuccess, onError) {
+                return this.axiosPut(`/table/${tableId}`, body, onSuccess, onError);
+            },
+            deleteTable({Id}, onSuccess, onError) {
+                return this.axiosDelete(`/table/${Id}`, false, onSuccess, onError);
+            },
+
+            // Поля
+            getFields(body, onSuccess, onError) {
+                return this.axiosGet('/field', body, onSuccess, onError);
+            },
+            getFieldsList(onSuccess, onError) {
+                return this.axiosGet('/field/list', false, onSuccess, onError);
+            },
+            getField(fieldId, onSuccess, onError) {
+                return this.axiosGet(`/field/${fieldId}`, false, onSuccess, onError);
+            },
+            getFieldTypes(body, onSuccess, onError) {
+                return this.axiosGet(`/field/types`, body, onSuccess, onError);
+            },
+
+            createField(body, onSuccess, onError) {
+                return this.axiosPost('/field', body, onSuccess, onError);
+            },
+            saveField(fieldId, body, onSuccess, onError) {
+                return this.axiosPut(`/field/${fieldId}`, body, onSuccess, onError);
+            },
+            deleteField({Id}, onSuccess, onError) {
+                return this.axiosDelete(`/field/${Id}`, false, onSuccess, onError);
+            },
+
             getPostConstants(onSuccess, onError) {
                 return this.axiosGet('/constant/post', false, onSuccess, onError);
-            }
+            },
+
+            getRecords(tableId, body, onSuccess, onError) {
+                return this.axiosGet(`/record/${tableId}`, body, onSuccess, onError);
+            },
+            getList(tableId, userId, body, onSuccess, onError) {
+                return this.axiosGet(`/record/${tableId}/${userId}`, body, onSuccess, onError);
+            },
+            showRecord(recordId, onSuccess, onError) {
+                return this.axiosGet(`/record/show/${recordId}`, null, onSuccess, onError);
+            },
+            createRecord(recordId, body, onSuccess, onError) {
+                const url = recordId !== undefined ? `/record/${recordId}` : `/record`;
+                return this.axiosPost(url, body, onSuccess, onError);
+            },
+            saveRecord(recordId, body, onSuccess, onError) {
+                return this.axiosPut(`/record/update/${recordId}`, body, onSuccess, onError);
+            },
         };
     },
 };

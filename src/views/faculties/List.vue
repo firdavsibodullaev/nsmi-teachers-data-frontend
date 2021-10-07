@@ -76,7 +76,7 @@ export default {
       this.loading = true;
       this.$api.deleteFaculty(data, () => {
         this.fetch();
-        this.loading = true;
+        this.loading = false;
       }, () => {
         this.loading = false;
       });

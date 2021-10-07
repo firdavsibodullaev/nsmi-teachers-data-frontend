@@ -120,9 +120,8 @@ export default {
           const fields = formatResponseValidatorFields(data, values);
           this.loading = false;
           if (status === 422) {
-            const errors = data.errors;
             this.validationFails = true;
-            this.validationErrors = errors;
+            this.validationErrors = data.errors;
             this.form.setFieldsValue(fields);
           }
         });

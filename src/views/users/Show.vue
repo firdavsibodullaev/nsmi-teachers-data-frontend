@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p><strong>Полное имя:</strong> {{ data.LastName }} {{ data.FirstName }} {{ data.Patronymic }}</p>
+
     <p><strong>Место работы:</strong>
       <span
           v-if="data.Faculty"> {{ data.Faculty.FullNameRu }}, кафедра {{ data.Department.FullNameRu }}</span>
