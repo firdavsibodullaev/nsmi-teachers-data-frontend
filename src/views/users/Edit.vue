@@ -85,6 +85,11 @@
                 v-decorator="['password_confirmation', {rules:[{required:false, message: 'Введите пожалуйста пароль повторно'}]}]"
             ></a-input>
           </a-form-item>
+          <a-form-item>
+            <a-button type="primary"
+                      @click="generatePassword">Сгенерировать пароль
+            </a-button>
+          </a-form-item>
         </a-col>
         <a-col :span="5">
           <p><strong>Данные по работе</strong></p>
@@ -155,6 +160,7 @@
 <script>
 import {TheMask} from 'vue-the-mask';
 import {formatResponseValidatorFields} from "../../helpers";
+import {generatePassword} from "../../helpers";
 
 export default {
   beforeCreate() {
@@ -252,6 +258,13 @@ export default {
       });
       this.$api.getFaculties(false, ({data}) => {
         this.faculties = data.data;
+      });
+    },
+    generatePassword() {
+      const password = generatePassword();
+      this.form.setFieldsValue({
+        password: password,
+        password_confirmation: password
       });
     }
   },
