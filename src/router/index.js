@@ -16,7 +16,7 @@ export const routes = [
         component: () => import('../views/HomePage'),
         show: false,
         meta: {
-            for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
+            for: ['*'],
             middleware: [auth],
             title: 'Главная страница'
         }
@@ -28,9 +28,21 @@ export const routes = [
         component: () => import('../views/LoginPage'),
         show: false,
         meta: {
-            for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
+            for: ['*'],
             middleware: [guest],
             title: 'Авторизация',
+        }
+    },
+    {
+        path: '/logout',
+        name: 'logout',
+        icon: '',
+        component: () => import('../views/LoginPage'),
+        show: false,
+        meta: {
+            for: ['*'],
+            middleware: [auth],
+            title: 'Выход из системы',
         }
     },
     {
@@ -39,7 +51,7 @@ export const routes = [
         show: true,
         component: () => import('../views/MainIndex.vue'),
         meta: {
-            for: ['super_admin', 'admin', 'moderator'],
+            for: ['Админ'],
             title: 'Справочники',
             middleware: [auth],
         },
@@ -51,7 +63,7 @@ export const routes = [
                 show: true,
                 component: () => import('../views/layouts/PrimaryLayout.vue'),
                 meta: {
-                    for: ['super_admin', 'admin', 'moderator'],
+                    for: ['Админ'],
                     middleware: [auth],
                     title: 'Пользователи'
                 },
@@ -63,7 +75,7 @@ export const routes = [
                         component: () => import('../views/users/List'),
                         show: true,
                         meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Список пользователей'
                         }
@@ -76,7 +88,7 @@ export const routes = [
                         component: () => import('../views/users/Create'),
                         show: true,
                         meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Новый пользователь'
                         }
@@ -89,7 +101,7 @@ export const routes = [
                         component: () => import('../views/users/Show'),
                         meta: {
                             drawerForm: 'UserShow',
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Пользователь'
                         }
@@ -101,7 +113,7 @@ export const routes = [
                         show: false,
                         component: () => import('../views/users/Edit'),
                         meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Редактирование пользователя'
                         }
@@ -230,200 +242,6 @@ export const routes = [
                     },
                 ]
             },
-            {
-                path: 'tables',
-                name: 'tables',
-                icon: '',
-                show: true,
-                component: () => import('../views/layouts/PrimaryLayout.vue'),
-                meta: {
-                    for: ['super_admin', 'admin', 'moderator'],
-                    middleware: [auth],
-                    title: 'Таблицы',
-                },
-                children: [
-                    {
-                        path: '',
-                        name: 'table-list',
-                        icon: '',
-                        show: true,
-                        component: () => import('../views/tables/List'),
-                        meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
-                            middleware: [auth],
-                            title: 'Список таблиц'
-                        }
-                    },
-                    {
-                        path: 'create',
-                        name: 'table-create',
-                        icon: '',
-                        show: true,
-                        component: () => import('../views/tables/Create'),
-                        meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
-                            middleware: [auth],
-                            title: 'Новая таблица'
-                        }
-                    },
-                    {
-                        path: 'show/:id',
-                        name: 'table-show',
-                        icon: '',
-                        show: false,
-                        component: () => import('../views/tables/Show'),
-                        meta: {
-                            drawerForm: 'TableShow',
-                            for: ['super_admin', 'admin', 'moderator'],
-                            middleware: [auth],
-                            title: 'Таблица'
-                        }
-                    },
-                    {
-                        path: 'edit/:id',
-                        name: 'table-edit',
-                        icon: '',
-                        show: false,
-                        component: () => import('../views/tables/Edit'),
-                        meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
-                            middleware: [auth],
-                            title: 'Редактирование таблицы'
-                        }
-                    }
-                ]
-            },
-            {
-                path: 'fields',
-                name: 'fields',
-                icon: '',
-                show: true,
-                component: () => import('../views/layouts/PrimaryLayout.vue'),
-                meta: {
-                    for: ['super_admin', 'admin', 'moderator'],
-                    middleware: [auth],
-                    title: 'Поля таблицы'
-                },
-                children: [
-                    {
-                        path: '',
-                        name: 'field-list',
-                        icon: '',
-                        show: true,
-                        component: () => import('../views/fields/List'),
-                        meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
-                            middleware: [auth],
-                            title: 'Список полей',
-                        },
-                    },
-                    {
-                        path: 'create',
-                        name: 'field-create',
-                        icon: '',
-                        show: true,
-                        component: () => import('../views/fields/Create'),
-                        meta: {
-                            drawerForm: 'FieldCreate',
-                            for: ['super_admin', 'admin', 'moderator'],
-                            middleware: [auth],
-                            title: 'Новое поле',
-                        },
-                    },
-                    {
-                        path: 'show/:id',
-                        name: 'field-show',
-                        icon: '',
-                        show: false,
-                        component: () => import('../views/fields/Show'),
-                        meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
-                            middleware: [auth],
-                            title: 'Поле',
-                        },
-                    },
-                    {
-                        path: 'edit/:id',
-                        name: 'field-edit',
-                        icon: '',
-                        show: false,
-                        component: () => import('../views/fields/Edit'),
-                        meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
-                            middleware: [auth],
-                            title: 'Редактирование поля',
-                        },
-                    },
-                ]
-            },
-        ]
-    },
-    {
-        path: '/actions',
-        name: 'action',
-        show: true,
-        component: () => import('../views/MainIndex'),
-        meta: {
-            for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
-            middleware: [auth],
-            title: 'Таблицы'
-        },
-        children: [
-            {
-                path: '',
-                name: 'action-list',
-                show: true,
-                component: () => import('../views/actions/Index'),
-                meta: {
-                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
-                    middleware: [auth],
-                    title: 'Список'
-                }
-            },
-            {
-                path: 'list/:id',
-                name: 'action-table-list',
-                show: false,
-                component: () => import('../views/actions/Records'),
-                meta: {
-                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
-                    middleware: [auth],
-                    title: 'Записи'
-                }
-            },
-            {
-                path: 'show/:tableId/:userId',
-                name: 'action-table-show',
-                show: false,
-                component: () => import('../views/actions/RecordsView'),
-                meta: {
-                    for: ['super_admin', 'admin', 'moderator', 'dean', 'vice_dean', 'department_head', 'teacher'],
-                    middleware: [auth],
-                    title: 'Записи'
-                }
-            },
-            {
-                path: 'add/:id',
-                name: 'action-table-add',
-                show: false,
-                component: () => import('../views/actions/AddRecord'),
-                meta: {
-                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
-                    middleware: [auth],
-                    title: 'Новый запись'
-                }
-            },
-            {
-                path: 'edit/:id',
-                name: 'action-table-edit',
-                show: false,
-                component: () => import('../views/actions/EditRecord'),
-                meta: {
-                    for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
-                    middleware: [auth],
-                    title: 'Редактирование записи'
-                }
-            },
         ]
     },
     {
@@ -431,9 +249,9 @@ export const routes = [
         name: '403',
         icon: '',
         show: false,
-        component: () => import('../views/errors/403'),
+        component: () => import('../views/errors/forbidden'),
         meta: {
-            for: ['super_admin', 'admin', 'moderator', 'rector', 'vice_rector', 'dean', 'vice_dean', 'department_head', 'teacher'],
+            for: ['*'],
             title: 'Отказано в доступе',
         }
     },
@@ -443,7 +261,7 @@ export const routes = [
         show: false,
         component: () => import('../views/errors/404.vue'),
         meta: {
-            for: ['root', 'admin', 'owner', 'guest'],
+            for: ['*'],
             title: 'Страница не найдено',
         },
     },
@@ -458,7 +276,7 @@ sync(store, router);
 router.beforeEach((to, from, next) => {
     const {middleware} = to.meta;
     const user = store.getters['user/user'];
-    if (typeof user === 'object' && !to.meta.for.includes(user.Post.KeyName)) {
+    if (typeof user === 'object' && !to.meta.for.includes(user.post.name) && !to.meta.for.includes('*')) {
         return next({name: '403'})
     }
     document.title = to.meta.title;

@@ -17,10 +17,10 @@
                     size="large"
                     :style="{ backgroundColor: '#108ee9', verticalAlign: 'middle' }"
                 >
-              {{ user.FirstName.charAt(0) }}
+              {{ user.full_name.first_name.charAt(0) }}
             </a-avatar>
           </a-badge>
-          <span style="margin-left: 1em">{{ user.FirstName }}</span>
+          <span style="margin-left: 1em">{{ user.full_name.first_name }}</span>
         </span>
       <a-menu slot="overlay">
         <a-menu-item v-on:click="logout">

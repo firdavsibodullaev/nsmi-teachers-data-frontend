@@ -1,10 +1,10 @@
 <template>
-  <div></div>
+  <div>403</div>
 </template>
 
 <script>
 export default {
-  name: "403"
+  name: "forbidden"
 }
 </script>
 

@@ -8,9 +8,10 @@
           aria-autocomplete="off">
         <a-form-item label="Логин">
           <a-input
+              aria-autocomplete="off"
               class="ant-input"
               v-decorator="[
-              'Username',
+              'username',
               {
               rules: [{ required: true, message: 'Пожалуйста введите логин' }] },
             ]"
@@ -21,7 +22,7 @@
         <a-form-item label="Пароль">
           <a-input-password
               v-decorator="[
-          'Password',
+          'password',
           { rules: [{ required: true, message: 'Пожалуйста введите пароль' }] },
         ]"
               type="password"
@@ -34,8 +35,10 @@
           <a-checkbox
               v-decorator="[
               'remember', { valuePropName: 'checked', initialValue: false, },
-            ]">Запомнить этот компьютер !
+            ]">
+            Запомнить этот компьютер!
           </a-checkbox>
+          <br>
           <a-button type="primary"
                     html-type="submit" class="login-form-button" :loading="isSubmitting">
             <span v-if="!isSubmitting">Войти</span>
@@ -78,8 +81,8 @@ export default {
             const fields = formatResponseValidatorFields(data, values);
             if (status === 401) {
               this.form.setFields({
-                Phone: {
-                  value: values.Phone,
+                username: {
+                  value: values.username,
                   errors: [new Error('Неверное имя пользователя или пароль')],
                 },
               });
@@ -113,7 +116,7 @@ export default {
   border-radius: 1rem;
   max-height: 21rem;
   display: block;
-  width: 20%;
+  width: 25%;
   /*margin-top: 10%;*/
 }
 

@@ -12,8 +12,8 @@
           <a-form-item label="Фамилия">
             <a-input
                 placeholder="Введите фамилию"
-                v-decorator="['LastName', {
-                  initialValue: data.LastName,
+                v-decorator="['last_name', {
+                  initialValue: data ? data.full_name.last_name : null,
                   rules:[{required:true, message: 'Введите пожалуйста фамилию'}]
                 }]"
             />
@@ -21,8 +21,8 @@
           <a-form-item label="Имя">
             <a-input
                 placeholder="Введите имя"
-                v-decorator="['FirstName', {
-                  initialValue: data.FirstName,
+                v-decorator="['first_name', {
+                  initialValue: data ? data.full_name.first_name : null,
                   rules:[{required:true, message: 'Введите пожалуйста имя'}]
                 }]"
             />
@@ -30,8 +30,8 @@
           <a-form-item label="Отчество">
             <a-input
                 placeholder="Введите отчество"
-                v-decorator="['Patronymic', {
-                  initialValue: data.Patronymic,
+                v-decorator="['patronymic', {
+                  initialValue: data ? data.full_name.patronymic : null,
                   rules:[{required:true, message: 'Введите пожалуйста отчество'}]
                 }]"
             />
@@ -42,8 +42,8 @@
                 :mask="['### (##) ###-##-##']"
                 placeholder="998 (YY) XXX-XX-XX"
                 @input="handlePhoneChange"
-                v-decorator="['Phone', {
-                  initialValue: data.Phone,
+                v-decorator="['phone', {
+                  initialValue: data ? data.phone: null,
                   rules:[{required:true, message: 'Введите пожалуйста номер телефона'}]
                 }]"
             />
@@ -53,8 +53,9 @@
                 style="width:250px"
                 placeholder="Выберите дату рождения"
                 @change="changeDate"
-                v-decorator="['Birth', {
-                  initialValue: data.Birth,
+                v-decorator="['birthdate', {
+                  initialValue: data
+                  ? data.birthdate : null,
                   rules:[{required:false, message: 'Выберите дату'}]
                 }]"
             />
@@ -66,8 +67,8 @@
           <a-form-item label="Логин">
             <a-input
                 placeholder="Введите логин"
-                v-decorator="['Username', {
-                  initialValue: data.Username,
+                v-decorator="['username', {
+                  initialValue: data?data.username:null,
                   rules:[{required:true, message: 'Введите пожалуйста логин'}]
                 }]"
             ></a-input>
@@ -75,13 +76,13 @@
           <a-form-item label="Пароль">
             <a-input
                 placeholder="Введите пароль"
-                v-decorator="['Password', {rules:[{required:false, message: 'Введите пожалуйста пароль'}]}]"
+                v-decorator="['password', {rules:[{required:false, message: 'Введите пожалуйста пароль'}]}]"
             ></a-input>
           </a-form-item>
           <a-form-item label="Подтверждение паролья">
             <a-input
                 placeholder="Введите пароль повторно"
-                v-decorator="['Password_confirmation', {rules:[{required:false, message: 'Введите пожалуйста пароль повторно'}]}]"
+                v-decorator="['password_confirmation', {rules:[{required:false, message: 'Введите пожалуйста пароль повторно'}]}]"
             ></a-input>
           </a-form-item>
         </a-col>
@@ -91,15 +92,15 @@
             <a-select
                 placeholder="Выберите факультет"
                 style="width: 250px"
-                @change="handleChangeSelectValue($event, 'FacultyId')"
+                @change="handleChangeSelectValue($event, 'faculty_id')"
                 v-decorator="[
-                'FacultyId',
-                { initialValue: data.Faculty.Id,
-                rules: [{ required: true,
+                'faculty_id',
+                { initialValue: faculty,
+                rules: [{ required: false,
                 message: 'Выберите факультет' }] }, ]"
             >
-              <a-select-option v-for="(item, index) in faculties" :key="index" :value="item.Id">
-                {{ item.FullNameUz }}
+              <a-select-option v-for="(item, index) in faculties" :key="index" :value="item.id">
+                {{ item.full_name.uz }}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -107,15 +108,15 @@
             <a-select
                 placeholder="Выберите кафедру"
                 style="width: 250px"
-                @change="handleChangeSelectValue($event, 'DepartmentId')"
-                v-decorator="['DepartmentId', {
-                  initialValue: data.Department.Id,
+                @change="handleChangeSelectValue($event, 'department_id')"
+                v-decorator="['department_id', {
+                  initialValue: (data && data.department ? data.department.id : null),
                   rules:[{
-                  required:true, message: 'Выберите кафедру'}]
+                  required:false, message: 'Выберите кафедру'}]
                 }]"
             >
-              <a-select-option v-for="(item, index) in departments" :key="index" :value="item.Id">
-                {{ item.FullNameUz }}
+              <a-select-option v-for="(item, index) in departments" :key="index" :value="item.id">
+                {{ item.full_name.ru }}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -124,14 +125,14 @@
                 placeholder="Выберите должность"
                 style="width: 250px"
                 @change="handleChangePost"
-                v-decorator="['Post', {
-                  initialValue: data.Post.KeyName,
+                v-decorator="['post', {
+                  initialValue: data ? data.post.id : null,
                   rules:[{
                   required:true, message: 'Введите должность'}]
                 }]"
             >
-              <a-select-option v-for="(item, index) in posts" :key="index" :value="index">
-                {{ item }}
+              <a-select-option v-for="(item, index) in posts" :key="index" :value="item.id">
+                {{ item.name }}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -167,7 +168,7 @@ export default {
       loading: false,
       posts: [],
       faculties: [],
-      faculty: false,
+      faculty: null,
       validationFails: false,
       validationErrors: [],
       data: null,
@@ -176,8 +177,8 @@ export default {
   computed: {
     departments() {
       if (this.faculty && this.faculties.length) {
-        const filteredFaculty = this.faculties.filter((item) => item.Id === this.faculty);
-        return filteredFaculty[0].Departments;
+        const filteredFaculty = this.faculties.filter((item) => item.id === this.faculty);
+        return filteredFaculty[0].departments;
       }
       return [];
     },
@@ -188,7 +189,7 @@ export default {
       this.form.validateFields((error, values) => {
         if (!error) {
           this.loading = true;
-          this.$api.saveUser(this.data.Id, values, () => {
+          this.$api.saveUser(this.data.id, values, () => {
             this.$router.push({name: 'user-list'});
           }, ({data, status}) => {
             const fields = formatResponseValidatorFields(data, values);
@@ -205,19 +206,20 @@ export default {
       })
     },
     handlePhoneChange(val) {
+
       this.form.setFieldsValue({
-        Phone: val
+        phone: val.length === 9 ? `+998${val}` : `+${val}`
       });
     },
     handleChangePost(val) {
       this.form.setFieldsValue({
-        Post: val
+        post: val
       });
     },
     handleChangeFaculty(val) {
       this.form.setFieldsValue({
-        FacultyId: val,
-        DepartmentId: null,
+        faculty_id: val,
+        department_id: null,
       });
     },
     handleChangeSelectValue(value, field) {
@@ -225,30 +227,28 @@ export default {
         [field]: value,
       });
 
-      if (field === 'FacultyId') {
+      if (field === 'faculty_id') {
         this.faculty = value;
-        this.handleChangeSelectValue(null, 'DepartmentId');
+        this.handleChangeSelectValue(null, 'department_id');
       }
     },
     handleChangeDepartment(val) {
       this.form.setFieldsValue({
-        DepartmentId: val
+        department_id: val
       });
     },
     changeDate(date, dateString) {
       this.form.setFieldsValue({
-        Birth: dateString
+        birthdate: dateString
       });
     },
     fetch() {
       this.$api.getUser(this.$route.params['id'], ({data}) => {
         this.data = data.data;
-        this.faculty = this.data.Faculty.Id;
-        console.log(1);
+        this.faculty = this.data.faculty ? this.data.faculty.id : null;
       });
-      console.log(2);
-      this.$api.getPostConstants(({data}) => {
-        this.posts = data;
+      this.$api.getUserPostsList(({data}) => {
+        this.posts = data.data;
       });
       this.$api.getFaculties(false, ({data}) => {
         this.faculties = data.data;

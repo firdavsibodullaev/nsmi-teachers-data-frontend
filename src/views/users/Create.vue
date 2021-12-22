@@ -12,28 +12,28 @@
           <a-form-item label="Фамилия">
             <a-input
                 placeholder="Введите фамилию"
-                v-decorator="['LastName', {rules:[{required:true, message: 'Введите пожалуйста фамилию'}]}]"
+                v-decorator="['last_name', {rules:[{required:true, message: 'Введите пожалуйста фамилию'}]}]"
             />
           </a-form-item>
           <a-form-item label="Имя">
             <a-input
                 placeholder="Введите имя"
-                v-decorator="['FirstName', {rules:[{required:true, message: 'Введите пожалуйста имя'}]}]"
+                v-decorator="['first_name', {rules:[{required:true, message: 'Введите пожалуйста имя'}]}]"
             />
           </a-form-item>
           <a-form-item label="Отчество">
             <a-input
                 placeholder="Введите отчество"
-                v-decorator="['Patronymic', {rules:[{required:true, message: 'Введите пожалуйста отчество'}]}]"
+                v-decorator="['patronymic', {rules:[{required:true, message: 'Введите пожалуйста отчество'}]}]"
             />
           </a-form-item>
           <a-form-item label="Номер телефона">
             <InputMask
                 class="ant-input"
-                :mask="['### (##) ###-##-##']"
-                placeholder="998 (YY) XXX-XX-XX"
+                :mask="['+998 (##) ###-##-##']"
+                placeholder="+998 (YY) XXX-XX-XX"
                 @input="handlePhoneChange"
-                v-decorator="['Phone', {rules:[{required:true, message: 'Введите пожалуйста номер телефона'}]}]"
+                v-decorator="['phone', {rules:[{required:true, message: 'Введите пожалуйста номер телефона'}]}]"
             />
           </a-form-item>
           <a-form-item label="Дата рождения">
@@ -41,7 +41,7 @@
                 style="width:250px"
                 placeholder="Выберите дату рождения"
                 @change="changeDate"
-                v-decorator="['Birth', {rules:[{required:false, message: 'Выберите дату'}]}]"
+                v-decorator="['birthdate', {rules:[{required:false, message: 'Выберите дату'}]}]"
             />
           </a-form-item>
 
@@ -51,20 +51,25 @@
           <a-form-item label="Логин">
             <a-input
                 placeholder="Введите логин"
-                v-decorator="['Username', {rules:[{required:true, message: 'Введите пожалуйста логин'}]}]"
+                v-decorator="['username', {rules:[{required:true, message: 'Введите пожалуйста логин'}]}]"
             ></a-input>
           </a-form-item>
           <a-form-item label="Пароль">
             <a-input
                 placeholder="Введите пароль"
-                v-decorator="['Password', {rules:[{required:true, message: 'Введите пожалуйста пароль'}]}]"
+                v-decorator="['password', {rules:[{required:true, message: 'Введите пожалуйста пароль'}]}]"
             ></a-input>
           </a-form-item>
           <a-form-item label="Подтверждение паролья">
             <a-input
                 placeholder="Введите пароль повторно"
-                v-decorator="['Password_confirmation', {rules:[{required:true, message: 'Введите пожалуйста пароль повторно'}]}]"
+                v-decorator="['password_confirmation', {rules:[{required:true, message: 'Введите пожалуйста пароль повторно'}]}]"
             ></a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary"
+                      @click="generatePassword">Сгенерировать пароль
+            </a-button>
           </a-form-item>
         </a-col>
         <a-col :span="5">
@@ -74,10 +79,10 @@
                 placeholder="Выберите факультет"
                 style="width: 250px"
                 @change="handleChangeFaculty"
-                v-decorator="['FacultyId', {rules:[{required:true, message: 'Выберите факультет'}]}]"
+                v-decorator="['faculty_id', {rules:[{required:false, message: 'Выберите факультет'}]}]"
             >
-              <a-select-option v-for="(item, index) in faculties" :key="index" :value="item.Id">
-                {{ item.FullNameUz }}
+              <a-select-option v-for="(item, index) in faculties" :key="index" :value="item.id">
+                {{ item.full_name.ru }}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -86,10 +91,10 @@
                 placeholder="Выберите кафедру"
                 style="width: 250px"
                 @change="handleChangeDepartment"
-                v-decorator="['DepartmentId', {rules:[{required:true, message: 'Выберите кафедру'}]}]"
+                v-decorator="['department_id', {rules:[{required:false, message: 'Выберите кафедру'}]}]"
             >
-              <a-select-option v-for="(item, index) in departments" :key="index" :value="item.Id">
-                {{ item.FullNameUz }}
+              <a-select-option v-for="(item, index) in departments" :key="index" :value="item.id">
+                {{ item.full_name.ru }}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -98,10 +103,10 @@
                 placeholder="Выберите должность"
                 style="width: 250px"
                 @change="handleChangePost"
-                v-decorator="['Post', {rules:[{required:true, message: 'Введите должность'}]}]"
+                v-decorator="['post', {rules:[{required:true, message: 'Введите должность'}]}]"
             >
-              <a-select-option v-for="(item, index) in posts" :key="index" :value="index">
-                {{ item }}
+              <a-select-option v-for="(item, index) in posts" :key="'role-'+index" :value="item.id">
+                {{ item.name }}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -124,6 +129,7 @@
 <script>
 import {TheMask} from 'vue-the-mask';
 import {formatResponseValidatorFields} from "../../helpers";
+import {generatePassword} from "../../helpers";
 
 export default {
   beforeCreate() {
@@ -145,8 +151,8 @@ export default {
   computed: {
     departments() {
       if (this.faculty) {
-        const faculty = this.faculties.filter((item) => item.Id === this.faculty);
-        return faculty[0].Departments;
+        const faculty = this.faculties.filter((item) => item.id === this.faculty);
+        return faculty[0].departments;
       }
       return [];
     }
@@ -176,34 +182,35 @@ export default {
     },
     handlePhoneChange(val) {
       this.form.setFieldsValue({
-        Phone: val
+        phone: val.length === 9 ? `+998${val}` : `+${val}`
       });
     },
     handleChangePost(val) {
       this.form.setFieldsValue({
-        Post: val
+        post: val,
+        roles: [val]
       });
     },
     handleChangeFaculty(val) {
       this.form.setFieldsValue({
-        FacultyId: val,
-        DepartmentId: null,
+        faculty_id: val,
+        department_id: null,
       });
       this.faculty = val;
     },
     handleChangeDepartment(val) {
       this.form.setFieldsValue({
-        DepartmentId: val
+        department_id: val
       });
     },
     changeDate(date, dateString) {
       this.form.setFieldsValue({
-        Birth: dateString
+        birthdate: dateString
       });
     },
     getPostsList() {
-      this.$api.getPostConstants(({data}) => {
-        this.posts = data;
+      this.$api.getUserPostsList(({data}) => {
+        this.posts = data.data;
       });
     },
     getFacultiesList() {
@@ -214,6 +221,13 @@ export default {
     fetch() {
       this.getPostsList();
       this.getFacultiesList();
+    },
+    generatePassword() {
+      const password = generatePassword();
+      this.form.setFieldsValue({
+        password: password,
+        password_confirmation: password
+      });
     }
   },
   created() {

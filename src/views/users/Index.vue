@@ -3,7 +3,7 @@
     <a-layout-content
         :style="{ margin: '24px 16px',
       padding: '24px 24px 0 24px',
-      background: '#fff',}">
+      background: '#fff'}">
       <router-view></router-view>
     </a-layout-content>
   </PrimaryLayout>
@@ -13,6 +13,6 @@
 import PrimaryLayout from '../layouts/PrimaryLayout';
 
 export default {
-  components: { PrimaryLayout },
+  components: {PrimaryLayout},
 };
 </script>

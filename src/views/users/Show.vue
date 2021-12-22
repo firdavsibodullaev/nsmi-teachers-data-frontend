@@ -1,21 +1,26 @@
 <template>
   <div>
-
+    <p>
+      <strong>ФИО:</strong>
+      <span>
+        {{data.full_name.last_name}} {{data.full_name.first_name}} {{data.full_name.patronymic}}
+      </span>
+    </p>
     <p><strong>Место работы:</strong>
       <span
-          v-if="data.Faculty"> {{ data.Faculty.FullNameRu }}, кафедра {{ data.Department.FullNameRu }}</span>
+          v-if="data.faculty"> {{ data.faculty.full_name.ru }}, кафедра {{ data.department.full_name.ru }}</span>
     </p>
     <p><strong>Должность:</strong>
-      {{ data.Post.Name }}
+      {{ data.post.name }}
     </p>
     <p><strong>Дата рождения:</strong>
-      {{ data.Birth }}
+      {{ data.birthdate }}
     </p>
     <p><strong>Номер телефона:</strong>
       {{ phone }}
     </p>
-    <p v-if="data.Email"><strong>Эл. почта</strong>
-      {{ data.Email }}
+    <p v-if="data.email"><strong>Эл. почта</strong>
+      {{ data.email }}
     </p>
   </div>
 </template>
@@ -28,8 +33,11 @@ export default {
       return this.$store.getters["drawer/getData"];
     },
     phone() {
-      const {Phone} = this.data;
-      return `+${Phone.substring(0, 3)} (${Phone.substring(3, 5)}) ${Phone.substring(5, 8)}-${Phone.substring(8, 10)}-${Phone.substring(10, 12)}`;
+      const {phone} = this.data;
+      if (phone) {
+        return `${phone.substring(0, 4)} (${phone.substring(4, 6)}) ${phone.substring(6, 9)}-${phone.substring(9, 11)}-${phone.substring(11, 13)}`;
+      }
+      return '—';
     }
   }
 }

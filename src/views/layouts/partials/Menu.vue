@@ -73,7 +73,7 @@ export default {
   methods: {
     onlyAvailable(items) {
       const user = this.$store.getters['user/user'];
-      return items.filter((i) => typeof i.show === 'boolean' && i.show === true && i.meta.for.includes(user.Post.KeyName));
+      return items.filter((i) => typeof i.show === 'boolean' && i.show === true && (i.meta.for.includes(user.post.name) || i.meta.for.includes('*')));
     },
     drawerOpen(value, title) {
       this.$store.dispatch('drawer/openDrawer', {
