@@ -5,13 +5,13 @@
       theme="dark"
       mode="inline">
     <template v-for="menu in menuItems">
-      <a-sub-menu :key="menu.name" v-if="menu.children">
+      <a-sub-menu :key="menu.name" v-if="menu.hasVisibleChildren">
         <span slot="title">
           <a-icon :type="menu.icon"/>
           <span>{{ menu.meta.title }}</span>
         </span>
         <template v-for="child in onlyAvailable(menu.children)">
-          <a-sub-menu :key="child.name" v-if="child.children">
+          <a-sub-menu :key="child.name" v-if="child.hasVisibleChildren">
           <span slot="title">
             <a-icon :type="child.icon"/>
             <span>{{ child.meta.title }}</span>
@@ -66,7 +66,7 @@ export default {
       return this.onlyAvailable(this.menus);
     },
     activeMenu() {
-      const routeKeys = _.map(this.$router.currentRoute.matched, 'name');
+      const routeKeys = _.map(this.$router.currentRoute.matched.filter((item) => item.show), 'name');
       return _.uniq(routeKeys);
     },
   },

@@ -6,10 +6,11 @@
     />
     <a-table :data-source="data"
              :loading="loading"
-             :rowKey="record => record.Id"
+             :rowKey="record => record.id"
              :pagination="pagination"
              :columns="columns"
              @change="handleTableChange"
+             bordered
     >
 
       <template slot="name" slot-scope="user">
@@ -29,7 +30,6 @@
             Редактировать
           </a-button>
           <a-popconfirm
-              v-if="user.id !== $store.getters['user/user'].id"
               title="Действительно собираетесь удалить запись?"
               ok-text="Yes"
               cancel-text="No"
@@ -39,12 +39,6 @@
               Удалить
             </a-button>
           </a-popconfirm>
-          <a-button v-else
-                    type="danger"
-                    :disabled="true"
-          >
-            Удалить
-          </a-button>
         </a-button-group>
       </template>
     </a-table>
@@ -57,6 +51,7 @@ import {sortQuery} from '../../helpers';
 
 const columns = [
   {
+    title: 'ФИО',
     width: "70%",
     dataIndex: 'full_name',
     key: 'full_name',
@@ -64,6 +59,7 @@ const columns = [
     scopedSlots: {customRender: 'name'}
   },
   {
+    title: 'Действия',
     key: 'actions',
     scopedSlots: {customRender: 'actions'}
   }

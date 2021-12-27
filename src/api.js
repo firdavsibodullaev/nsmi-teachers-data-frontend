@@ -2,6 +2,7 @@ import axios from 'axios';
 import Vue from 'vue';
 import store from './store';
 import router from './router';
+import {serializeUrl} from "./helpers";
 
 const api = axios.create({
     baseURL: process.env.VUE_APP_BASE_URL,
@@ -118,15 +119,12 @@ export default {
             getUser(userId, onSuccess, onError) {
                 return this.axiosGet(`/user/${userId}`, false, onSuccess, onError);
             },
+            getUsers(onSuccess, onError) {
+                return this.axiosGet(`/user/list`, null, onSuccess, onError);
+            },
             filterUsers(query, onSuccess, onError) {
-                const serialize = (obj) => {
-                    if (typeof obj !== "string") {
-                        return (Object.entries(obj).map(i => [i[0], encodeURIComponent(i[1])].join('=')).join('&'))
-                    }
-                    return obj;
-                };
 
-                return this.axiosGet(`/user?${serialize(query)}`, false, onSuccess, onError);
+                return this.axiosGet(`/user?${serializeUrl(query)}`, false, onSuccess, onError);
             },
             createUser(body, onSuccess, onError) {
                 return this.axiosPost('/user', body, onSuccess, onError);
@@ -177,6 +175,22 @@ export default {
             deleteDepartment({Id}, onSuccess, onError) {
                 return this.axiosDelete(`/department/${Id}`, null, onSuccess, onError);
             },
+
+            getDScDoctors(query, onSuccess, onError) {
+                return this.axiosGet(`/dsc-doctor?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            getDScDoctor(id, onSuccess, onError) {
+                return this.axiosGet(`/dsc-doctor/${id}`, null, onSuccess, onError);
+            },
+            saveDScDoctor(id, body, onSuccess, onError) {
+                return this.axiosPut(`/dsc-doctor/${id}`, body, onSuccess, onError);
+            },
+            createDScDoctor(body, onSuccess, onError) {
+                return this.axiosPost(`/dsc-doctor`, body, onSuccess, onError);
+            },
+            deleteDScDoctor(id, onSuccess, onError) {
+                return this.axiosDelete(`/dsc-doctor/${id}`, null, onSuccess, onError);
+            }
 
         };
     },

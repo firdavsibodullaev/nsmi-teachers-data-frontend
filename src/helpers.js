@@ -22,10 +22,11 @@ export function getBase64(file) {
 }
 
 export function sortQuery(sorter) {
+    const field = typeof sorter.field === 'undefined' ? sorter.columnKey : sorter.field;
     if (sorter.order === 'descend') {
-        return `-${sorter.field}`;
+        return `-${field}`;
     }
-    return sorter.field;
+    return field;
 }
 
 export function generatePassword(len = 8) {
@@ -37,9 +38,17 @@ export function generatePassword(len = 8) {
     return password;
 }
 
+export function serializeUrl(obj) {
+    if (typeof obj !== "string") {
+        return (Object.entries(obj).map(i => [i[0], encodeURIComponent(i[1])].join('=')).join('&'))
+    }
+    return obj;
+}
+
 export default {
     formatResponseValidatorFields,
     getBase64,
     sortQuery,
-    generatePassword
+    generatePassword,
+    serializeUrl
 };

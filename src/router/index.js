@@ -48,6 +48,7 @@ export const routes = [
     {
         path: '/lists',
         name: 'lists',
+        hasVisibleChildren: true,
         show: true,
         component: () => import('../views/MainIndex.vue'),
         meta: {
@@ -61,6 +62,7 @@ export const routes = [
                 name: 'users',
                 icon: 'usergroup-add',
                 show: true,
+                hasVisibleChildren: true,
                 component: () => import('../views/layouts/PrimaryLayout.vue'),
                 meta: {
                     for: ['Админ'],
@@ -124,10 +126,11 @@ export const routes = [
                 path: 'faculties',
                 name: 'faculties',
                 icon: '',
+                hasVisibleChildren: true,
                 show: true,
                 component: () => import('../views/layouts/PrimaryLayout.vue'),
                 meta: {
-                    for: ['super_admin', 'admin', 'moderator'],
+                    for: ['Админ'],
                     middleware: [auth],
                     title: 'Факультеты'
                 },
@@ -138,7 +141,7 @@ export const routes = [
                         show: true,
                         component: () => import('../views/faculties/List'),
                         meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Список факультетов'
                         }
@@ -149,7 +152,7 @@ export const routes = [
                         show: false,
                         component: () => import('../views/faculties/Edit'),
                         meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Редактирование факультета'
                         }
@@ -160,7 +163,7 @@ export const routes = [
                         show: true,
                         component: () => import('../views/faculties/Create'),
                         meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Новый факультет'
                         }
@@ -172,7 +175,7 @@ export const routes = [
                         component: () => import('../views/faculties/Show'),
                         meta: {
                             drawerForm: 'FacultyShow',
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Факультет'
                         }
@@ -183,10 +186,11 @@ export const routes = [
                 path: 'departments',
                 name: 'departments',
                 icon: '',
+                hasVisibleChildren: true,
                 show: true,
                 component: () => import('../views/layouts/PrimaryLayout.vue'),
                 meta: {
-                    for: ['super_admin', 'admin', 'moderator'],
+                    for: ['Админ'],
                     middleware: [auth],
                     title: 'Кафедры'
                 },
@@ -198,7 +202,7 @@ export const routes = [
                         show: true,
                         component: () => import('../views/departments/List'),
                         meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Список кафедр'
                         },
@@ -210,7 +214,7 @@ export const routes = [
                         show: true,
                         component: () => import('../views/departments/Create'),
                         meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Новая кафедра'
                         },
@@ -223,7 +227,7 @@ export const routes = [
                         component: () => import('../views/departments/Show'),
                         meta: {
                             drawerForm: 'DepartmentShow',
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Кафедра'
                         }
@@ -235,11 +239,86 @@ export const routes = [
                         show: false,
                         component: () => import('../views/departments/Edit'),
                         meta: {
-                            for: ['super_admin', 'admin', 'moderator'],
+                            for: ['Админ'],
                             middleware: [auth],
                             title: 'Редактирование кафедры'
                         }
                     },
+                ]
+            },
+        ]
+    },
+    {
+        path: '/table',
+        name: 'tables',
+        show: true,
+        hasVisibleChildren: true,
+        component: () => import('../views/MainIndex.vue'),
+        meta: {
+            for: ['*'],
+            title: 'Таблицы',
+            middleware: [auth],
+        },
+        children: [
+            {
+                path: 'dsc-doctors',
+                show: true,
+                name: 'dsc-doctors',
+                hasVisibleChildren: false,
+                component: () => import('../views/DSc-doctor/Index.vue'),
+                meta: {
+                    for: ['Админ'],
+                    middleware: [auth],
+                    title: 'DSc-доктор наук'
+                },
+            },
+        ]
+    },
+    {
+        path: '/table',
+        show: false,
+        hasVisibleChildren: false,
+        component: () => import('../views/MainIndex.vue'),
+        meta: {
+            for: ['*'],
+            title: 'Таблицы',
+            middleware: [auth],
+        },
+        children: [
+            {
+                path: 'dsc-doctors',
+                icon: 'usergroup-add',
+                show: false,
+                hasVisibleChildren: false,
+                component: () => import('../views/users/Index.vue'),
+                meta: {
+                    for: ['Админ'],
+                    middleware: [auth],
+                    title: 'DSc-доктор наук'
+                },
+                children: [
+                    {
+                        path: 'create',
+                        name: 'dsc_doctors_create',
+                        show: false,
+                        component: () => import('../views/DSc-doctor/Create'),
+                        meta: {
+                            for: ['Админ'],
+                            middleware: [auth],
+                            title: 'Добавить DSc-доктор наук'
+                        }
+                    },
+                    {
+                        path: 'edit/:id',
+                        name: 'dsc_doctors_edit',
+                        show: false,
+                        component: () => import('../views/DSc-doctor/Edit'),
+                        meta: {
+                            for: ['Админ'],
+                            middleware: [auth],
+                            title: 'Изменение DSc-доктор наук'
+                        }
+                    }
                 ]
             },
         ]

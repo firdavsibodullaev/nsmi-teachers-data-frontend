@@ -5,7 +5,7 @@
         <a-alert type="error" :message="mes" v-for="(mes, ind) in item" :key="ind" banner/>
       </a-col>
     </div>
-    <a-form :form="form" @submit="onSubmit" :layout="'vertical'">
+    <a-form :form="form" @submit="onSubmit" layout="vertical">
       <a-row>
         <a-col :span="8">
           <p><strong>Личные данные</strong></p>
@@ -150,7 +150,7 @@
               :loading="loading"
               @click="onSubmit"
           >
-            Submit
+            Сохранить
           </a-button>
         </a-form-item>
       </a-col>
@@ -209,7 +209,7 @@ export default {
           });
         }
         this.loading = false;
-      })
+      });
     },
     handlePhoneChange(val) {
 
