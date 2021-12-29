@@ -2,7 +2,7 @@
   <div>
     <div class="space-align-container">
       <a-button type="primary">
-        <router-link :to="{name: 'dsc_doctors_create'}">Добавить</router-link>
+        <router-link :to="{name: 'phd_doctors_create'}">Добавить</router-link>
       </a-button>
     </div>
     <a-table :data-source="data"
@@ -142,7 +142,7 @@ export default {
       this.fetch(parameters);
     },
     fetch(params = {}) {
-      this.$api.getDScDoctors({...params}, ({data}) => {
+      this.$api.getPhdDoctors({...params}, ({data}) => {
         this.data = data.data;
         this.pagination = {
           pageSize: data.meta.per_page,
@@ -156,11 +156,12 @@ export default {
       });
     },
     update(data) {
-      this.$router.push({name: 'dsc_doctors_edit', params: {id: data.id}});
+      this.$router.push({name: 'phd_doctors_edit', params: {id: data.id}});
     },
     destroy(data) {
+      console.log(data.id);
       this.loading = true;
-      this.$api.deleteDScDoctor(data.id, () => {
+      this.$api.deletePhdDoctor(data.id, () => {
         this.fetch();
       }, () => {
 

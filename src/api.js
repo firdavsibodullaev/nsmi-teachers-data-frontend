@@ -176,6 +176,7 @@ export default {
                 return this.axiosDelete(`/department/${Id}`, null, onSuccess, onError);
             },
 
+            // DSc докторы
             getDScDoctors(query, onSuccess, onError) {
                 return this.axiosGet(`/dsc-doctor?${serializeUrl(query)}`, null, onSuccess, onError);
             },
@@ -190,7 +191,24 @@ export default {
             },
             deleteDScDoctor(id, onSuccess, onError) {
                 return this.axiosDelete(`/dsc-doctor/${id}`, null, onSuccess, onError);
-            }
+            },
+
+            // Phd докторы
+            getPhdDoctors(query, onSuccess, onError) {
+                return this.axiosGet(`/phd-doctor?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            getPhdDoctor(id, onSuccess, onError) {
+                return this.axiosGet(`/phd-doctor/${id}`, null, onSuccess, onError);
+            },
+            savePhdDoctor(id, body, onSuccess, onError) {
+                return this.axiosPut(`/phd-doctor/${id}`, body, onSuccess, onError);
+            },
+            createPhdDoctor(body, onSuccess, onError) {
+                return this.axiosPost(`/phd-doctor`, body, onSuccess, onError);
+            },
+            deletePhdDoctor(id, onSuccess, onError) {
+                return this.axiosDelete(`/phd-doctor/${id}`, null, onSuccess, onError);
+            },
 
         };
     },

@@ -272,6 +272,18 @@ export const routes = [
                     title: 'DSc-доктор наук'
                 },
             },
+            {
+                path: 'phd-doctors',
+                show: true,
+                name: 'phd-doctors',
+                hasVisibleChildren: false,
+                component: () => import('../views/Phd-doctor/Index.vue'),
+                meta: {
+                    for: ['Админ'],
+                    middleware: [auth],
+                    title: 'Phd'
+                },
+            },
         ]
     },
     {
@@ -313,6 +325,42 @@ export const routes = [
                         name: 'dsc_doctors_edit',
                         show: false,
                         component: () => import('../views/DSc-doctor/Edit'),
+                        meta: {
+                            for: ['Админ'],
+                            middleware: [auth],
+                            title: 'Изменение DSc-доктор наук'
+                        }
+                    }
+                ]
+            },
+            {
+                path: 'phd-doctors',
+                icon: 'usergroup-add',
+                show: false,
+                hasVisibleChildren: false,
+                component: () => import('../views/users/Index.vue'),
+                meta: {
+                    for: ['Админ'],
+                    middleware: [auth],
+                    title: 'Phd'
+                },
+                children: [
+                    {
+                        path: 'create',
+                        name: 'phd_doctors_create',
+                        show: false,
+                        component: () => import('../views/Phd-doctor/Create'),
+                        meta: {
+                            for: ['Админ'],
+                            middleware: [auth],
+                            title: 'Добавить Phd'
+                        }
+                    },
+                    {
+                        path: 'edit/:id',
+                        name: 'phd_doctors_edit',
+                        show: false,
+                        component: () => import('../views/Phd-doctor/Edit'),
                         meta: {
                             for: ['Админ'],
                             middleware: [auth],

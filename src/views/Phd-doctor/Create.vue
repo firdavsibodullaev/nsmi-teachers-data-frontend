@@ -110,7 +110,7 @@ import {formatResponseValidatorFields} from "../../helpers";
 export default {
   name: "Create",
   beforeCreate() {
-    this.form = this.$form.createForm(this, {name: 'dsc-doctor_create'});
+    this.form = this.$form.createForm(this, {name: 'phd-doctor_create'});
   },
   data() {
     return {
@@ -121,6 +121,7 @@ export default {
   },
   methods: {
     onSubmit(e) {
+      console.log(this.form.getFieldsValue());
       e.preventDefault();
       this.loading = true;
       this.form.validateFields((error, values) => {
@@ -128,9 +129,9 @@ export default {
           this.loading = false;
           return;
         }
-        this.$api.createDScDoctor(values, () => {
+        this.$api.createPhdDoctor(values, () => {
           this.loading = false;
-          this.$router.push({name: 'dsc-doctors'});
+          this.$router.push({name: 'phd-doctors'});
         }, ({data, status}) => {
           const fields = formatResponseValidatorFields(data, values);
           if (status === 422) {
