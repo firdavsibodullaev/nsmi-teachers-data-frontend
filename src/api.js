@@ -119,8 +119,8 @@ export default {
             getUser(userId, onSuccess, onError) {
                 return this.axiosGet(`/user/${userId}`, false, onSuccess, onError);
             },
-            getUsers(onSuccess, onError) {
-                return this.axiosGet(`/user/list`, null, onSuccess, onError);
+            getUsers(query, onSuccess, onError) {
+                return this.axiosGet(`/user/list?${serializeUrl(query)}`, null, onSuccess, onError);
             },
             filterUsers(query, onSuccess, onError) {
 
@@ -208,6 +208,27 @@ export default {
             },
             deletePhdDoctor(id, onSuccess, onError) {
                 return this.axiosDelete(`/phd-doctor/${id}`, null, onSuccess, onError);
+            },
+
+
+            // articleCitation
+            getArticleCitations(query, onSuccess, onError) {
+                return this.axiosGet(`scientific-article-citation?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            getArticleCitation(id, onSuccess, onError) {
+                return this.axiosGet(`scientific-article-citation/${id}`, null, onSuccess, onError);
+            },
+            saveArticleCitation(body, onSuccess, onError) {
+                return this.axiosPost(`scientific-article-citation`, body, onSuccess, onError);
+            },
+            getJournals(query, onSuccess, onError) {
+                return this.axiosGet(`scientific-article-citation/journals?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            getLanguages(query, onSuccess, onError) {
+                return this.axiosGet(`scientific-article-citation/languages?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            deleteArticleCitation(id, onSuccess, onError) {
+                return this.axiosDelete(`scientific-article-citation/${id}`, null, onSuccess, onError);
             },
 
         };

@@ -39,6 +39,9 @@ export function generatePassword(len = 8) {
 }
 
 export function serializeUrl(obj) {
+    if (!obj) {
+        return "";
+    }
     if (typeof obj !== "string") {
         return (Object.entries(obj).map(i => [i[0], encodeURIComponent(i[1])].join('=')).join('&'))
     }

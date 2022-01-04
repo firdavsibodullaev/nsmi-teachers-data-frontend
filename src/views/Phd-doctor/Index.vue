@@ -138,7 +138,7 @@ export default {
         sort: sortQuery(sorter),
         ...filters,
       };
-      if (typeof parameters.sort === 'undefined') delete parameters.sort;
+      if (typeof parameters.sort === 'undefined' || typeof sorter.order === 'undefined') delete parameters.sort;
       this.fetch(parameters);
     },
     fetch(params = {}) {

@@ -284,6 +284,18 @@ export const routes = [
                     title: 'Phd'
                 },
             },
+            {
+                path: 'scientific-article-citation',
+                show: true,
+                name: 'articleCitation',
+                hasVisibleChildren: false,
+                component: () => import('../views/articleCitation/AdminList.vue'),
+                meta: {
+                    for: ['Админ'],
+                    middleware: [auth],
+                    title: 'Цитаты'
+                },
+            },
         ]
     },
     {
@@ -367,6 +379,39 @@ export const routes = [
                             title: 'Изменение DSc-доктор наук'
                         }
                     }
+                ]
+            },
+            {
+                path: 'scientific-article-citation',
+                show: false,
+                hasVisibleChildren: false,
+                component: () => import('../views/users/Index.vue'),
+                meta: {
+                    for: ['*'],
+                    middleware: [auth],
+                    title: 'Цитаты'
+                },
+                children: [
+                    {
+                        name: 'article_citation_create',
+                        path: 'create',
+                        component: ()=> import('../views/articleCitation/Create.vue'),
+                        meta: {
+                            for: ['*'],
+                            middleware: [auth],
+                            title: 'Добавить запись'
+                        }
+                    },
+                    {
+                        name: 'article_citation_edit',
+                        path: 'edit/:id',
+                        component: ()=> import('../views/articleCitation/Edit.vue'),
+                        meta: {
+                            for: ['*'],
+                            middleware: [auth],
+                            title: 'Изменить запись'
+                        }
+                    },
                 ]
             },
         ]
