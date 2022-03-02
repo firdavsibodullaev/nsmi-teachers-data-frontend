@@ -27,16 +27,16 @@
                 v-decorator="['magazine_name', {
               rules:[{required:true, message: 'Выберите журнал'}]
             }]"
-                v-if="!journalNotFound"
+                v-if="!magazineNotFound"
                 show-search
                 placeholder="Выберите журнал"
                 :filter-option="filterOption"
             >
-              <a-select-option v-for="journal in journals"
-                               :key="'journal'+journal.id"
-                               :value="journal.title"
+              <a-select-option v-for="magazine in magazines"
+                               :key="'magazine'+magazine.id"
+                               :value="magazine.title"
               >
-                {{ journal.title }}
+                {{ magazine.title }}
               </a-select-option>
             </a-select>
             <a-input
@@ -45,7 +45,7 @@
                 v-decorator="['magazine_name', {
               rules:[{required:true, message: 'Введите пожалуйста название журнала'}]
             }]"/>
-            <a-checkbox style="margin-top: 5px" @change="journalNotFound = !journalNotFound">
+            <a-checkbox style="margin-top: 5px" @change="magazineNotFound = !magazineNotFound">
               Не нашли журнал в списке?
             </a-checkbox>
           </a-form-item>
@@ -132,15 +132,15 @@ export default {
       validationErrors: [],
       loading: false,
       users: [],
-      journals: [],
+      magazines: [],
       languages: [],
-      journalNotFound: false,
+      magazineNotFound: false,
     };
   },
   methods: {
     fetch() {
-      this.journals = this.$api.getJournals(null, ({data}) => {
-        this.journals = data.data;
+      this.magazines = this.$api.getMagazines(null, ({data}) => {
+        this.magazines = data.data;
       }, ({data}) => {
         console.log(data);
       });

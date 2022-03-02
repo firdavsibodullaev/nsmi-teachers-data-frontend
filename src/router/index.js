@@ -291,7 +291,7 @@ export const routes = [
                 hasVisibleChildren: false,
                 component: () => import('../views/articleCitation/AdminList.vue'),
                 meta: {
-                    for: ['Админ'],
+                    for: ['*'],
                     middleware: [auth],
                     title: 'Цитаты'
                 },
@@ -395,7 +395,7 @@ export const routes = [
                     {
                         name: 'article_citation_create',
                         path: 'create',
-                        component: ()=> import('../views/articleCitation/Create.vue'),
+                        component: () => import('../views/articleCitation/Create.vue'),
                         meta: {
                             for: ['*'],
                             middleware: [auth],
@@ -405,11 +405,21 @@ export const routes = [
                     {
                         name: 'article_citation_edit',
                         path: 'edit/:id',
-                        component: ()=> import('../views/articleCitation/Edit.vue'),
+                        component: () => import('../views/articleCitation/Edit.vue'),
                         meta: {
                             for: ['*'],
                             middleware: [auth],
                             title: 'Изменить запись'
+                        }
+                    },
+                    {
+                        name: 'article_citation_pending_confirmation',
+                        path: 'confirmation',
+                        component: () => import('../views/articleCitation/NotConfirmedList.vue'),
+                        meta: {
+                            for: ['Админ'],
+                            middleware: [auth],
+                            title: 'Не подтвержденные записи'
                         }
                     },
                 ]

@@ -215,14 +215,23 @@ export default {
             getArticleCitations(query, onSuccess, onError) {
                 return this.axiosGet(`scientific-article-citation?${serializeUrl(query)}`, null, onSuccess, onError);
             },
+            getNotConfirmedArticleCitations(query, onSuccess, onError) {
+                return this.axiosGet(`scientific-article-citation/confirmation?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            confirmArticleCitation(id, onSuccess, onError) {
+                return this.axiosPost(`scientific-article-citation/confirm/${id}`, null, onSuccess, onError);
+            },
             getArticleCitation(id, onSuccess, onError) {
                 return this.axiosGet(`scientific-article-citation/${id}`, null, onSuccess, onError);
             },
             saveArticleCitation(body, onSuccess, onError) {
                 return this.axiosPost(`scientific-article-citation`, body, onSuccess, onError);
             },
-            getJournals(query, onSuccess, onError) {
-                return this.axiosGet(`scientific-article-citation/journals?${serializeUrl(query)}`, null, onSuccess, onError);
+            updateArticleCitation(id, body, onSuccess, onError) {
+                return this.axiosPut(`scientific-article-citation/${id}`, body, onSuccess, onError);
+            },
+            getMagazines(query, onSuccess, onError) {
+                return this.axiosGet(`scientific-article-citation/magazines?${serializeUrl(query)}`, null, onSuccess, onError);
             },
             getLanguages(query, onSuccess, onError) {
                 return this.axiosGet(`scientific-article-citation/languages?${serializeUrl(query)}`, null, onSuccess, onError);
