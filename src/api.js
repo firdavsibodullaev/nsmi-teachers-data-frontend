@@ -231,10 +231,10 @@ export default {
                 return this.axiosPut(`scientific-article-citation/${id}`, body, onSuccess, onError);
             },
             getMagazines(query, onSuccess, onError) {
-                return this.axiosGet(`scientific-article-citation/magazines?${serializeUrl(query)}`, null, onSuccess, onError);
+                return this.axiosGet(`magazines?${serializeUrl(query)}`, null, onSuccess, onError);
             },
             getLanguages(query, onSuccess, onError) {
-                return this.axiosGet(`scientific-article-citation/languages?${serializeUrl(query)}`, null, onSuccess, onError);
+                return this.axiosGet(`languages?${serializeUrl(query)}`, null, onSuccess, onError);
             },
             deleteArticleCitation(id, onSuccess, onError) {
                 return this.axiosDelete(`scientific-article-citation/${id}`, null, onSuccess, onError);
