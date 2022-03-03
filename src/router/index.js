@@ -296,6 +296,18 @@ export const routes = [
                     title: 'Цитаты'
                 },
             },
+            {
+                path: 'scientific-article',
+                show: true,
+                name: 'article',
+                hasVisibleChildren: false,
+                component: () => import('../views/article/AdminList.vue'),
+                meta: {
+                    for: ['*'],
+                    middleware: [auth],
+                    title: 'Статьи'
+                },
+            },
         ]
     },
     {
@@ -416,6 +428,49 @@ export const routes = [
                         name: 'article_citation_pending_confirmation',
                         path: 'confirmation',
                         component: () => import('../views/articleCitation/NotConfirmedList.vue'),
+                        meta: {
+                            for: ['Админ'],
+                            middleware: [auth],
+                            title: 'Не подтвержденные записи'
+                        }
+                    },
+                ]
+            },
+            {
+                path: 'scientific-article',
+                show: false,
+                hasVisibleChildren: false,
+                component: () => import('../views/users/Index.vue'),
+                meta: {
+                    for: ['*'],
+                    middleware: [auth],
+                    title: 'Статьи'
+                },
+                children: [
+                    {
+                        name: 'article_create',
+                        path: 'create',
+                        component: () => import('../views/article/Create.vue'),
+                        meta: {
+                            for: ['*'],
+                            middleware: [auth],
+                            title: 'Добавить запись'
+                        }
+                    },
+                    {
+                        name: 'article_edit',
+                        path: 'edit/:id',
+                        component: () => import('../views/article/Edit.vue'),
+                        meta: {
+                            for: ['*'],
+                            middleware: [auth],
+                            title: 'Изменить запись'
+                        }
+                    },
+                    {
+                        name: 'article_pending_confirmation',
+                        path: 'confirmation',
+                        component: () => import('../views/article/NotConfirmedList.vue'),
                         meta: {
                             for: ['Админ'],
                             middleware: [auth],

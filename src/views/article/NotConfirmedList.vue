@@ -3,14 +3,14 @@
     <a-table
         :columns="columns"
         :data-source="data"
-        :rowKey="record => 'table-'+record.id"
+        :rowKey="record => 'table-article-'+record.id"
         bordered
         :loading="loading"
         @change="handleTableChange"
     >
       <template slot="authors" slot-scope="users">
         <p v-for="user in users" :key="'user'+user.id">
-          {{ user.full_name.last_name }} {{ user.full_name.first_name }} {{ user.full_name.patronymic }}
+          {{ user.full_name_string }}
         </p>
       </template>
       <template slot="article-title" slot-scope="title" style="margin: 0 0 20px">
@@ -42,7 +42,7 @@
               </a-button>
             </a-popconfirm>
           </template>
-          <a-button type="link" v-html="beautifyTitle(title.article_title)">
+          <a-button type="link" v-html="beautifyTitle(title.title)">
           </a-button>
         </a-popover>
       </template>
@@ -62,36 +62,35 @@ import {sortQuery} from "@/helpers";
 const columns = [
   {
     title: 'Заголовок статьи',
-    key: 'article_title',
+    sorter: true,
+    key: 'title',
     scopedSlots: {customRender: 'article-title'},
     width: '15%',
   },
   {
     title: 'Название журнала',
+    sorter: true,
     key: 'magazine',
     scopedSlots: {customRender: 'magazine'},
     dataIndex: 'magazine',
   },
   {
-    title: 'Дата публикации',
-    key: 'magazine_publish_date',
-    dataIndex: 'magazine_publish_date_formatted'
+    title: 'Страна',
+    sorter: true,
+    key: 'country',
+    dataIndex: 'country.name',
   },
   {
-    title: 'Язык статьи',
-    key: 'article_language',
-    dataIndex: 'article_language.value'
+    title: 'Год публикации',
+    sorter: true,
+    key: 'year',
+    dataIndex: 'year'
   },
   {
     title: 'Авторы',
     key: 'authors',
     dataIndex: 'users',
     scopedSlots: {customRender: 'authors'}
-  },
-  {
-    title: 'Число',
-    key: 'citations_count',
-    dataIndex: 'citations_count'
   },
   {
     title: 'Ссылка на сайт',
@@ -120,18 +119,17 @@ export default {
       return titleArray.join(' ');
     },
     fetch(params = {}) {
-      this.$api.getNotConfirmedArticleCitations({...params}, ({data}) => {
+      this.$api.getNotConfirmedArticle({...params}, ({data}) => {
         this.data = data.data;
         this.loading = false;
-      }, ({data}) => {
-        console.log(data)
+      }, (data) => {
+        console.log(data);
+        this.loading = false;
       });
     },
     handleTableChange(pagination, filters, sorter) {
       this.loading = true;
       const parameters = {
-        results: pagination.pageSize,
-        page: pagination.current,
         sort: sortQuery(sorter),
         ...filters,
       };
@@ -140,25 +138,25 @@ export default {
     },
     confirm(data) {
       this.loading = true;
-      this.$api.confirmArticleCitation(data.id, () => {
+      this.$api.confirmArticle(data.id, () => {
         this.fetch();
       }, (data) => {
         console.log(data);
       });
     },
     update(data) {
-      this.$router.push({name: 'article_citation_edit', params: {id: data.id}});
+      this.$router.push({name: 'article_edit', params: {id: data.id}});
     },
     destroy(data) {
       this.loading = true;
-      this.$api.deleteArticleCitation(data.id, () => {
+      this.$api.deleteArticle(data.id, () => {
         this.fetch();
       }, (data) => {
         console.log(data);
       });
     },
   },
-  created() {
+  mounted() {
     this.fetch();
   }
 }

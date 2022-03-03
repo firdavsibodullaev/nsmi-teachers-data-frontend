@@ -6,18 +6,19 @@
       </a-col>
     </div>
     <a-form
+        :loading="loading"
         :form="form"
         @submit="onSubmit"
         layout="vertical"
         autocomplete="off"
     >
-      <a-row>
+      <a-row style="margin-bottom: 10px;">
         <a-col :span="12" style="box-sizing: border-box; padding: 0 5px;">
           <a-form-item label="Заголовок статьи">
             <a-input
                 placeholder="Введите заголовок статьи"
-                v-decorator="['article_title', {
-                  initialValue: data ? data.article_title : null,
+                v-decorator="['title', {
+                  initialValue:data ? data.title : null,
                   rules:[{required:true, message: 'Введите пожалуйста заголовок статьи'}]
             }]"/>
           </a-form-item>
@@ -26,12 +27,12 @@
           <a-form-item label="Журнал">
             <a-select
                 v-decorator="['magazine_name', {
-                  initialValue: data ? data.magazine.title : null,
+                  initialValue:data ? data.magazine.title : null,
                   rules:[{required:true, message: 'Выберите журнал'}]
-                }]"
+            }]"
                 v-if="!magazineNotFound"
-                show-search
                 placeholder="Выберите журнал"
+                show-search
                 :filter-option="filterOption"
             >
               <a-select-option v-for="magazine in magazines"
@@ -57,99 +58,114 @@
             <a-input
                 placeholder="Введите ссылку"
                 v-decorator="['link', {
-              initialValue:data ? data.link : null,
+                  initialValue:data ? data.link : null,
                   rules:[{required:true, message: 'Введите ссылку'}]
             }]"
             />
           </a-form-item>
         </a-col>
         <a-col :span="12" style="box-sizing: border-box; padding: 0 5px;">
-          <a-form-item label="Дата публикации статьи">
+          <a-form-item label="Год публикации статьи">
             <a-input
-                type="date"
-                v-decorator="['magazine_publish_date', {
-                  initialValue:data ? data.magazine_publish_date : null,
-                  rules:[{required:true, message: 'Введите дату'}]
+                placeholder="Введите год публикации статьи"
+                type="text"
+                @keydown="checkFormat($event)"
+                @keyup="checkFormat($event)"
+                v-decorator="['publish_year', {
+                  initialValue:data ? data.year : null,
+                  rules:[{required:true, message: 'Введите год'}]
             }]"
             />
           </a-form-item>
         </a-col>
         <a-col :span="12" style="box-sizing: border-box; padding: 0 5px;">
-          <a-form-item label="Язык статьи">
-            <a-select
-                v-decorator="['article_language', {
-                  initialValue:data ? data.article_language.key : null,
-                  rules:[{required:true, message: 'Введите выберите язык'}]
-                }]"
-                placeholder="Выберите язык"
-                :filter-option="filterOption"
-            >
-              <a-select-option v-for="(language, index) in languages"
-                               :key="'language-'+index"
-                               :value="index"
-              >
-                {{ language }}
-              </a-select-option>
-            </a-select>
+          <a-form-item label="Страниц">
+            <a-input
+                placeholder="Введите число стрниц"
+                v-decorator="['pages', {
+                    initialValue: data ? data.pages : null,
+                    rules:[{required:true, message: 'Введите пожалуйста число стрниц'}]
+            }]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12" style="box-sizing: border-box; padding: 0 5px;">
-          <a-form-item label="Количество цитат">
+          <a-form-item label="Страна">
+            <a-select
+                v-decorator="['country_name', {
+                    initialValue: data ? data.country.name : null,
+                    rules:[{required:true, message: 'Выберите страну'}]
+            }]"
+                v-if="!countryNotFound"
+                show-search
+                placeholder="Выберите страну"
+                :filter-option="filterOption"
+            >
+              <a-select-option v-for="country in countries"
+                               :key="'magazine'+country.id"
+                               :value="country.name"
+              >
+                {{ country.name }}
+              </a-select-option>
+            </a-select>
             <a-input
-                type="number"
-                placeholder="Введите количество цитат"
-                v-decorator="['citations_count', {
-                  initialValue: data ? data.citations_count : null
-                }]"/>
+                v-else
+                placeholder="Введите страну"
+                v-decorator="['country_name', {
+              rules:[{required:true, message: 'Введите пожалуйста название страны'}]
+            }]"/>
+            <a-checkbox style="margin-top: 5px" @change="countryNotFound = !countryNotFound">
+              Не нашли журнал в списке?
+            </a-checkbox>
+          </a-form-item>
+        </a-col>
+        <a-col :span="24" style="box-sizing: border-box; padding: 0 5px;">
+          <a-form-item label="Соавторы">
+            <div v-for="i in usersCount"
+                 style="margin-bottom: 15px;"
+                 :ref="'user-'+i"
+                 :key="'users'+i">
+              <a-select
+                  style="margin-bottom: 5px;"
+                  :disabled="notAdmin"
+                  show-search
+                  :filter-option="filterOption"
+                  v-decorator="['users['+(i-1)+']', {
+                  initialValue: data ? computedUsers[(i-1)] : null,
+                }]"
+                  placeholder="Выберите соавторов"
+              >
+                <a-select-option
+                    v-for="user in users"
+                    :value="user.id"
+                    :key="'user'+user.id">
+                  {{ user.full_name_string }}
+                </a-select-option>
+              </a-select>
+              <a-button type="danger"
+                        :disabled="notAdmin"
+                        @click="remove(i)">Убрать
+              </a-button>
+            </div>
+            <a-button type="primary" @click="usersCount++">Добавить автора</a-button>
           </a-form-item>
         </a-col>
       </a-row>
-      <a-form-item label="Соавторы">
-        <div v-for="i in usersCount"
-             style="margin-bottom: 15px;"
-             :ref="'user-'+i"
-             :key="'users'+i">
-          <a-select
-              style="margin-bottom: 5px;"
-              :disabled="notAdmin"
-              show-search
-              :filter-option="filterOption"
-              v-decorator="['users['+(i-1)+']', {
-                  initialValue: data ? computedUsers[(i-1)] : null,
-                }]"
-              placeholder="Выберите соавторов"
-          >
-            <a-select-option
-                v-for="user in users"
-                :value="user.id"
-                :key="'user'+user.id">
-              {{ user.full_name_string }}
-            </a-select-option>
-          </a-select>
-          <a-button type="danger"
-                    :disabled="notAdmin"
-                    @click="remove(i)">Убрать
-          </a-button>
-        </div>
-        <a-button type="primary" @click="usersCount++">Добавить автора</a-button>
-      </a-form-item>
-      <a-button type="primary" :loading="loading" @click="onSubmit">Создать</a-button>
+      <a-button type="primary" :loading="loading" @click="onSubmit">Сохранить</a-button>
     </a-form>
   </div>
 </template>
 
 <script>
 import {formatResponseValidatorFields} from "@/helpers";
-import _ from 'lodash';
+import _ from "lodash";
 
 export default {
   name: "Create",
   beforeCreate() {
-    this.form = this.$form.createForm(this, {name: 'article_citation-form'})
+    this.form = this.$form.createForm(this, {name: 'article-form'})
   },
   data() {
     return {
-      data: null,
       validationFails: false,
       validationErrors: [],
       loading: false,
@@ -157,12 +173,12 @@ export default {
       savedUsers: [],
       magazines: [],
       languages: [],
+      countries: [],
+      data: null,
       magazineNotFound: false,
-      usersCount: 1
+      countryNotFound: false,
+      usersCount: 1,
     };
-  },
-  mounted() {
-    this.fetch();
   },
   computed: {
     computedUsers() {
@@ -175,27 +191,28 @@ export default {
   methods: {
     fetch() {
       this.$api.getUsers(null, ({data}) => {
-        this.users = data.data;
+        this.users = this.savedUsers.concat(data.data);
       }, ({data}) => {
         console.log(data);
       });
-
+      this.$api.getArticle(this.$route.params['id'], ({data}) => {
+        this.data = data.data;
+        this.savedUsers = data.data.users;
+        this.usersCount = data.data.users.length;
+      });
       this.$api.getMagazines(null, ({data}) => {
         this.magazines = data.data;
+      }, ({data}) => {
+        console.log(data);
+      });
+      this.$api.getCountries(null, ({data}) => {
+        this.countries = data.data;
       }, ({data}) => {
         console.log(data);
       });
 
       this.$api.getLanguages(null, ({data}) => {
         this.languages = data;
-      }, (data) => {
-        console.log(data);
-      });
-
-      this.$api.getArticleCitation(this.$route.params['id'], ({data}) => {
-        this.data = data.data;
-        this.savedUsers = data.data.users;
-        this.usersCount = data.data.users.length;
       }, (data) => {
         console.log(data);
       });
@@ -207,9 +224,9 @@ export default {
           return;
         }
         this.loading = true;
-        this.$api.updateArticleCitation(this.$route.params['id'], values, () => {
+        this.$api.updateArticle(this.$route.params['id'], values, () => {
           this.loading = false;
-          this.$router.push({name: 'articleCitation'});
+          this.$router.push({name: 'article'});
         }, ({data, status}) => {
           const fields = formatResponseValidatorFields(data, values);
           this.loading = false;
@@ -220,7 +237,6 @@ export default {
             this.form.setFieldsValue(fields);
           }
         });
-
         console.log(error);
         console.log(values);
       })
@@ -229,6 +245,13 @@ export default {
       return (
           option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
       );
+    },
+    checkFormat(el) {
+      const keyCodes = [8, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
+      const data = el.path[0].value;
+      if ((!keyCodes.includes(el.keyCode) || data.length >= 4) && el.keyCode !== 8) {
+        el.preventDefault();
+      }
     },
     remove(count) {
       if (Object.keys(this.$refs).length <= 1) {
@@ -242,6 +265,9 @@ export default {
 
       delete this.$refs['user-' + count];
     }
+  },
+  mounted() {
+    this.fetch();
   }
 }
 </script>

@@ -230,16 +230,43 @@ export default {
             updateArticleCitation(id, body, onSuccess, onError) {
                 return this.axiosPut(`scientific-article-citation/${id}`, body, onSuccess, onError);
             },
-            getMagazines(query, onSuccess, onError) {
-                return this.axiosGet(`magazines?${serializeUrl(query)}`, null, onSuccess, onError);
-            },
-            getLanguages(query, onSuccess, onError) {
-                return this.axiosGet(`languages?${serializeUrl(query)}`, null, onSuccess, onError);
-            },
             deleteArticleCitation(id, onSuccess, onError) {
                 return this.axiosDelete(`scientific-article-citation/${id}`, null, onSuccess, onError);
             },
 
+            // article
+            getArticles(query, onSuccess, onError) {
+                return this.axiosGet(`scientific-article?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            getNotConfirmedArticle(query, onSuccess, onError) {
+                return this.axiosGet(`scientific-article/confirmation?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            confirmArticle(id, onSuccess, onError) {
+                return this.axiosPost(`scientific-article/confirm/${id}`, null, onSuccess, onError);
+            },
+            getArticle(id, onSuccess, onError) {
+                return this.axiosGet(`scientific-article/${id}`, null, onSuccess, onError);
+            },
+            saveArticle(body, onSuccess, onError) {
+                return this.axiosPost(`scientific-article`, body, onSuccess, onError);
+            },
+            updateArticle(id, body, onSuccess, onError) {
+                return this.axiosPut(`scientific-article/${id}`, body, onSuccess, onError);
+            },
+            deleteArticle(id, onSuccess, onError) {
+                return this.axiosDelete(`scientific-article/${id}`, null, onSuccess, onError);
+            },
+
+
+            getMagazines(query, onSuccess, onError) {
+                return this.axiosGet(`magazines?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            getCountries(query, onSuccess, onError) {
+                return this.axiosGet(`countries?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
+            getLanguages(query, onSuccess, onError) {
+                return this.axiosGet(`languages?${serializeUrl(query)}`, null, onSuccess, onError);
+            },
         };
     },
 };
