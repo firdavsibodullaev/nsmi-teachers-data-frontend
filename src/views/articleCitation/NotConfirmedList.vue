@@ -75,7 +75,7 @@ const columns = [
   {
     title: 'Дата публикации',
     key: 'magazine_publish_date',
-    dataIndex: 'magazine_publish_date_formatted'
+    dataIndex: 'magazine_publish_date'
   },
   {
     title: 'Язык статьи',

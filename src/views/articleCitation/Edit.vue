@@ -68,7 +68,7 @@
             <a-input
                 type="date"
                 v-decorator="['magazine_publish_date', {
-                  initialValue:data ? data.magazine_publish_date : null,
+                  initialValue:data ? data.magazine_publish_date_original : null,
                   rules:[{required:true, message: 'Введите дату'}]
             }]"
             />
