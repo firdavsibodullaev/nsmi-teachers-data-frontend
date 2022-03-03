@@ -133,7 +133,7 @@
         </div>
         <a-button type="primary" @click="usersCount++">Добавить автора</a-button>
       </a-form-item>
-      <a-button type="primary" :loading="loading" @click="onSubmit">Создать</a-button>
+      <a-button type="primary" :loading="loading" @click="onSubmit">Сохранить</a-button>
     </a-form>
   </div>
 </template>
